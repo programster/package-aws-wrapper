@@ -13,14 +13,14 @@ abstract class Ec2RequestAbstract
     private $m_return_curl_handle = null;
     private $m_curl_opts = array();
     
-    protected abstract function get_options_array();
+    protected abstract function getOptionsArray();
     
     /**
      * 
      * @param Array $curlOpts - A set of values to pass directly into curl_setopt(), where the key 
      *                          is a pre-defined CURLOPT_* constant.
      */
-    public function set_curl_opts(Array $curlOpts)
+    public function setCurlOpts(Array $curlOpts)
     {
         $this->m_curl_opts = $curlOpts;
     }
@@ -30,7 +30,7 @@ abstract class Ec2RequestAbstract
      * This is the call that actually runs the request. It can should only be called from this 
      * abstract object in the send function as this needs to add its own properties.
      */
-    protected abstract function send_request(\AmazonEC2 $ec2, Array $opt);
+    protected abstract function sendRequest(\Aws\Ec2\Ec2Client $ec2, Array $options);
 
 
     /**
@@ -42,7 +42,7 @@ abstract class Ec2RequestAbstract
      *                                  true earlier as it is defaulted to false. 
      * @return void
      */
-    public function set_return_curl_handle($return_curl_handle=true)
+    public function setReturnCurlHandle($return_curl_handle=true)
     {
         $this->m_return_curl_handle=true;
     }
@@ -53,9 +53,9 @@ abstract class Ec2RequestAbstract
      * request. 
      * @return CFResponse
      */
-    public final function send(\AmazonEC2 $ec2)
-    {        
-        $opts = static::get_options_array();
+    public final function send(\Aws\Ec2\Ec2Client $ec2Client)
+    {
+        $opts = static::getOptionsArray();
         
         if (count($this->m_curl_opts) > 0)
         {
@@ -69,24 +69,8 @@ abstract class Ec2RequestAbstract
             $opts['returnCurlHandle'] = $this->returnCurlHandle;
         }
         
-        
         // Get the response from a call to the DescribeImages operation.
-        
-        $response = static::send_request($ec2, $opts);
-        
-        $debugMsg = "response for " . get_called_class() . ' request: ' . PHP_EOL .
-                    print_r($response, true);
-        
-        \iRAP\CoreLibs\Core::debugPrintln($debugMsg);
-        
-        /* @var $response ResponseCore */
-        if (!$response->isOK())
-        {
-            $className = get_called_class();
-            $err_msg = $className . ' - error processing request: ' . print_r($response, true);
-            throw new \Exception($err_msg);
-        }
-        
+        $response = static::sendRequest($ec2Client, $opts);        
         return $response;
     }
 }

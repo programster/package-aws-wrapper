@@ -17,7 +17,7 @@ class RequestCancelSpotInstance extends Ec2RequestAbstract
      * @param AmazonRegion $region - the region the spot requests were made to.
      * @param mixed $spot_request_id - a single spot request id, or an array list of spot request ids.
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AmazonRegion $region, $spot_request_id)
+    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, $spot_request_id)
     {
         $this->m_region     = $region;
         $this->m_request_id = $spot_request_id;
@@ -29,13 +29,13 @@ class RequestCancelSpotInstance extends Ec2RequestAbstract
      * parent 
      * @return Array - all the options array parameters for cancel_spot_instance_requests.
      */
-    protected function get_options_array()
+    protected function getOptionsArray()
     {
         return array();
     }
-
     
-    protected function send_request(\AmazonEC2 $ec2, array $opt)
+    
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt)
     {
         $ec2->set_region((string)$this->m_region);
         $response = $ec2->cancel_spot_instance_requests($this->m_request_id, $opt);

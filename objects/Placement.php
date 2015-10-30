@@ -25,7 +25,7 @@ class Placement
      * @param AmazonRegion $region - the region that we are placing in.
      * @return Placement $placement - the generated Placement object.
      */
-    public static function create_with_availability_zone(AmazonRegion $region)
+    public static function createWithAvailabilityZone(AwsRegion $region)
     {
         $placement = new Placement();
         $placement->m_availability_zone = $region;
@@ -33,18 +33,19 @@ class Placement
     }
     
     
-    
     /**
      * Create one of these objects by parsing the stdobject returned from an AWS api request
      * @param stdObject $std_object_placement - the stdobject from aws api.
      * @return Placmenet $placement;
      */
-    public static function create_from_aws_api($std_object_placement)
+    public static function createFromAwsApi($std_object_placement)
     {
         $placement = new Placement();
-        $placement->m_availability_zone = (string)$std_object_placement->availabilityZone;
-        $placement->m_group_name = (string)$std_object_placement->groupName;
-        $placement->m_tenancy = (string)$std_object_placement->tenancy;
+        
+        $placement->m_availability_zone = (string) $std_object_placement['AvailabilityZone']; # e.g. "eu-west-1b"
+        $placement->m_group_name        = (string) $std_object_placement['GroupName'];
+        $placement->m_tenancy           = (string) $std_object_placement['Tenancy']; # e.g. "default"
+        
         return $placement;
     }
     
@@ -57,27 +58,37 @@ class Placement
      *                            Performance Computing instances in the same group to ensure fast 
      *                            connection speeds.
      */
-    public function create_with_group_name($group_name)
+    public function createWithGroupName($group_name)
     {
         $placement = new Placement();
         $placement->m_availability_zone = $region;
         return $placement;
     }
     
-    public function to_array()
+    
+    /**
+     * Convert this objeect into an array form that can be used by the aws sdk.
+     * @return type
+     */
+    public function toArray()
     {
-        $array_form = array();
+        $arrayForm = array();
         
         if ($this->m_availability_zone != null)
         {
-            $array_form['AvailabilityZone'] = $this->m_availability_zone;
+            $arrayForm['AvailabilityZone'] = $this->m_availability_zone;
         }
         
         if ($this->m_group_name != null)
         {
-            $array_form['GroupName'] = $this->m_group_name;
+            $arrayForm['GroupName'] = $this->m_group_name;
         }
         
-        return $array_form;
+        if ($this->m_tenancy != null)
+        {
+            $arrayForm['Tenancy'] = $this->m_tenancy;
+        }
+        
+        return $arrayForm;
     }
 }

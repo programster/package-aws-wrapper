@@ -5,22 +5,21 @@ namespace iRAP\AwsWrapper\Requests;
 /*
  * Class for spot instance requests.
  * Please refer to the documentation at:
- * http://docs.aws.amazon.com/AWSSDKforPHP/latest/#m=AmazonEC2/request_spot_instances
+ * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#runinstances
  */
 
 class RequestRunInstances extends Ec2RequestAbstract
 {
-    private $m_region; # the region the request is sent to.
-    private $m_image_id;
-    private $m_max_count;
-    private $m_min_count;
-    private $m_disable_api_termination= null;
-    private $m_launch_specification;
-    private $m_licence_pools = array();
-    private $m_client_token = null;
+    private $m_maxCount;
+    private $m_minCount;
+    private $m_disableApiTermination = false;
+    private $m_launchSpecification;
+    private $m_clientToken = null;
+    private $m_dryRun = false;
+    private $m_instanceInitiatedShutdownBehavior = 'stop';
     
     # Array list of any generated instances created when request(s) sent.
-    private $m_generated_instances = array();
+    private $m_generatedInstances = array();
     
     
     /**
@@ -32,11 +31,10 @@ class RequestRunInstances extends Ec2RequestAbstract
      *                       account (default: 20).
      * @param int minCount - The minimum number of instances to launch. If the value is more than
      *                       Amazon EC2 can launch, no instances are launched at all.
-     * @param LaunchSpecification $launch_specification - the launch specification of the request
+     * @param LaunchSpecification $launchSpecification - the launch specification of the request
      *                                                   refer to that object for details.
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AmazonRegion $region,
-                                \iRAP\AwsWrapper\Objects\LaunchSpecification $launch_specification,
+    public function __construct(\iRAP\AwsWrapper\Objects\LaunchSpecification $launchSpecification,
                                 $maxCount, 
                                 $minCount)
     {
@@ -48,11 +46,9 @@ class RequestRunInstances extends Ec2RequestAbstract
             throw new \Exception('minCount for RunInstancesRequest must be greater than 0');
         }
         
-        $this->m_region    = $region;
-        $this->m_image_id  = $launch_specification->getImageId();
-        $this->m_max_count = $maxCount;
-        $this->m_min_count = $minCount;
-        $this->m_launch_specification = $launch_specification;
+        $this->m_maxCount = $maxCount;
+        $this->m_minCount = $minCount;
+        $this->m_launchSpecification = $launchSpecification;
     }
     
     
@@ -63,19 +59,7 @@ class RequestRunInstances extends Ec2RequestAbstract
      */
     public function disableApiTermination($flag = true)
     {
-        $this->m_disable_api_termination = $flag;
-    }
-    
-    
-    /**
-     * Add a license pool from which to take a license when starting Amazon EC2 instances in the 
-     * associated RunInstances request.
-     * @param String $licencePool - the pool representing where licences can be used.
-     * @return void
-     */
-    public function add_licence_pool($licencePool)
-    {
-        $this->m_licence_pools[] = $licencePool;
+        $this->m_disableApiTermination = $flag;
     }
     
     
@@ -84,9 +68,9 @@ class RequestRunInstances extends Ec2RequestAbstract
      * Please refer to:
      * http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Run_Instance_Idempotency.html
      */
-    public function set_client_token($token)
+    public function setClientToken($token)
     {
-        $this->m_client_token = $token;
+        $this->m_clientToken = $token;
     }
     
     
@@ -99,7 +83,7 @@ class RequestRunInstances extends Ec2RequestAbstract
      *                     stopping ebs volumes on ec2 termination.
      * @return void.
      */
-    public function terminate_ebs_on_termination($flag=true)
+    public function terminateEbsOnTermination($flag=true)
     {
         if ($flag)
         {
@@ -118,54 +102,24 @@ class RequestRunInstances extends Ec2RequestAbstract
      * options and the LaunchSpecification in spot_instance_request.
      * @return Array $options - the options for the request.
      */
-    public function get_options_array()
+    public function getOptionsArray()
     {
-        $options = $this->m_launch_specification->to_array();
+        $options = array(
+            'InstanceInitiatedShutdownBehavior' => $this->m_instanceInitiatedShutdownBehavior,
+            'DisableApiTermination'             => $this->m_disableApiTermination,
+            'DryRun'                            => $this->m_dryRun,
+            'MaxCount'                          => $this->m_maxCount,
+            'MinCount'                          => $this->m_minCount,
+            'InstanceInitiatedShutdownBehavior' => $this->m_instanceInitiatedShutdownBehavior
+        );
         
-        # ImageId was moved to the run_instances method rather than the options, so we unset it 
-        # here.
-        unset($options['ImageId']);
+        $options = array_merge($options, $this->m_launchSpecification->toArray());
         
-        if (isset($options['GroupSet']))
+        if (isset($this->m_clientToken))
         {
-            unset($options['GroupSet']);
+            $options['ClientToken'] = $this->m_clientToken;
         }
         
-        # S.P - Dont ask me why the run_instances request has a different key name for the exact  
-        # same set of configuration vars.
-        if (isset($options['NetworkInterface']))
-        {
-            $options['NetworkInterface'] = $options['NetworkInterfaceSet'];
-            unset($options['NetworkInterfaceSet']);
-        }
-        
-        if (isset($this->m_disable_api_termination))
-        {
-            $options['DisableApiTermination'] = $this->m_disable_api_termination;
-        }
-        
-        if (count($this->m_licence_pools) > 0)
-        {
-            $licencePools = array();
-            
-            foreach($this->m_licence_pools as $pool)
-            {
-                # AWS format is crazy huh?
-                $licencePools[] = array('Pool' => $pool);
-            }
-            
-            $options['License'] = $licencePools;
-        }
-        
-        if (isset($this->m_instanceInitiatedShutdownBehavior))
-        {
-            $options['InstanceInitiatedShutdownBehavior'] = $this->m_terminateEbsOnTermination;
-        }
-        
-        if (isset($this->m_client_token))
-        {
-            $options['ClientToken'] = $this->m_client_token;
-        }
         
         return $options;
     }
@@ -173,30 +127,44 @@ class RequestRunInstances extends Ec2RequestAbstract
     
     /**
      * Send the request to spawn instances!
-     * @param AmazonEC2 $ec2 - the ec2 client (from sdk) that actaully makes the requst
-     * @param array $opt - the optional array to put into the request generated from this object.
+     * @param \Aws\Ec2\Ec2Client $ec2Client - the ec2 client (from sdk) that actaully makes the requst
+     * @param array $options - the optional array to put into the request generated from this object.
      */
-    protected function send_request(\AmazonEC2 $ec2, array $opt) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2Client, array $options) 
     {
-        $ec2->set_region($this->m_region);
+        $response = $ec2Client->runInstances($options);
+        /* @var $response \Aws\Result */
+        $ec2InstanceStdObjs = $response->get('Instances');
         
-        /* @var $response CFResponse */
-        $response = $ec2->run_instances($this->m_image_id, 
-                                        $this->m_min_count, 
-                                        $this->m_max_count, 
-                                        $opt);
-        
-        if ($response->isOK())
+        foreach ($ec2InstanceStdObjs as $ec2StdObj)
         {
-            $ec2InstanceStdObjs = $response->body->instancesSet->item;
-            
-            foreach ($ec2InstanceStdObjs as $ec2StdObj)
-            {
-                $this->m_generated_instances[] = \iRAP\AwsWrapper\Objects\Ec2Instance::create_from_aws_item($ec2StdObj);
-            }
+            $this->m_generatedInstances[] = \iRAP\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($ec2StdObj);
         }
         
         return $response;
+    }
+    
+    
+    /**
+     * Specify whether this is just a dry run or not. By default it is NOT.
+     * @param bool $dryRun - optionally set to false.
+     */
+    public function setDryRun($dryRun = true)
+    {
+        $this->m_dryRun = $dryRun;
+    }
+    
+    
+    /**
+     * Run this method to have the instance terminate when it is shutdown, rather than just 
+     * being held in a stopped state. Note that you are not charged for the instance in the stopped
+     * state and this is the default behaviour when shutdown. 
+     * If termination on shutdown is enabled, the API can essentially terminate by shutting it down
+     * even if DisableApiTermination is set
+     */
+    public function terminateInstanceOnShutdown()
+    {
+        $this->m_instanceInitiatedShutdownBehavior = 'terminate';
     }
     
     
@@ -205,9 +173,6 @@ class RequestRunInstances extends Ec2RequestAbstract
      * @param void 
      * @return Array<Ec2Instance> - array list of ec2Instance objects.
      */
-    public function get_spawned_instances() { return $this->m_generated_instances; }
-    
-
+    public function getSpawnedInstances() { return $this->m_generatedInstances; }
 }
-
 

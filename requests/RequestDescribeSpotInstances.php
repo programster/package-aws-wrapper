@@ -16,8 +16,8 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
     private $m_spot_instances = array();
     
     
-    private $m_spot_instance_ids = array(); # ec2 instance ids that the requests spawned.
-
+    private $m_spotInstanceIds = array(); # ec2 instance ids that the requests spawned.
+    
     
     /**
      * 
@@ -26,7 +26,7 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
      *                                This can be a string representing a single instance, or an
      *                                array list of instances.
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AmazonRegion $region, $spot_instance_id=array())
+    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, $spot_instance_id=array())
     {
         $this->m_region = $region;
         
@@ -68,7 +68,7 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
      * http://docs.aws.amazon.com/AWSSDKforPHP/latest/index.html#m=AmazonEC2/describe_regions
      * @return Array $options
      */
-    protected function get_options_array() 
+    protected function getOptionsArray() 
     {
         $options = array();
         
@@ -79,7 +79,7 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
         
         if ($this->m_filter != null)
         {
-            $options['Filter'] = $this->m_filter->to_array();
+            $options['Filter'] = $this->m_filter->toArray();
         }
         
         return $options;
@@ -92,32 +92,28 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
      * @param array $opt - the options parameter for the request.
      * @return CFResponse
      */
-    protected function send_request(\AmazonEC2 $ec2, array $opt) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt) 
     {
-        $ec2->set_region((string) $this->m_region);
         $response = $ec2->describe_spot_instance_requests($opt);
         
-        if ($response->isOK())
+
+        $items = $response->body->item;        
+        $items = $response->body->spotInstanceRequestSet->item;
+
+        foreach ($items as $item)
         {
-            $items = $response->body->item;        
-            $items = $response->body->spotInstanceRequestSet->item;
-
-            foreach ($items as $item)
-            {
-                $spotInstance = SpotInstance::create_from_aws_item($item);
-                $this->m_spot_instances[] = $spotInstance;
-                $this->m_spot_instance_ids[] = $spotInstance->getSpotInstanceId();
-            }
-
-            # remove any null elements
-            $this->m_spot_instance_ids = array_filter($this->m_spot_instance_ids);
+            $spotInstance = SpotInstance::create_from_aws_item($item);
+            $this->m_spot_instances[] = $spotInstance;
+            $this->m_spotInstanceIds[] = $spotInstance->getSpotInstanceId();
         }
+
+        # remove any null elements
+        $this->m_spotInstanceIds = array_filter($this->m_spotInstanceIds);
         
         return $response;
     }
     
     
-    public function get_instance_ids() { return $this->m_spot_instance_ids; }
+    public function getInstanceIds() { return $this->m_spotInstanceIds; }
     public function get_spot_instances() { return $this->m_spot_instances; }
-
 }

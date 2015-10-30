@@ -11,7 +11,7 @@ namespace iRAP\AwsWrapper\Requests;
 class RequestDescribeInstances extends Ec2RequestAbstract
 {
     private $m_region; 
-    private $m_filter = null;
+    private $m_filters = null;
     private $m_instance_ids = array();
     private $m_instances = array(); # array for holding returned instances.
     private $m_returned_instance_ids = array();
@@ -21,44 +21,36 @@ class RequestDescribeInstances extends Ec2RequestAbstract
      * Create a request for fetching information about instances.
      * @param AmazonRegion $region - the region that you want the instances for. Unfortunately it
      *                               is not possible to get instances for all regions in one request
-     * @param Array $instance_ids - optionally specify an array of instance ids or a string 
-     *                             representing a single one.
+     * @param Array $instance_ids - optionally specify an array of instance ids to describe
      * @return RequestDescribeInstances
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AmazonRegion $region, $instance_ids=array())
+    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, array $instance_ids=array())
     {
         $this->m_region = $region;
         
         if (is_array($instance_ids))
         {
-            foreach ($instance_ids as $instanceId)
-            {
-                $this->m_instance_ids[$instanceId] = 1;
-            }
-        }
-        else
-        {
-            $this->m_instance_ids = array($instance_ids => 1);
+            $this->m_instance_ids = $instance_ids;
         }
     }
     
-    protected function get_options_array() 
+    
+    protected function getOptionsArray() 
     {
         $options = array();
         
-        if ($this->m_filter != null)
+        if ($this->m_filters != null)
         {
-            $options['Filter'] = $this->m_filter->to_array();
+            $options['Filters'] = $this->m_filters->toArray();
         }
         
         if (count($this->m_instance_ids) > 0)
         {
-            $options['InstanceId'] = array_keys($this->m_instance_ids);
+            $options['InstanceIds'] = $this->m_instance_ids;
         }
-                
+        
         return $options;
     }
-
     
     
     /**
@@ -68,21 +60,21 @@ class RequestDescribeInstances extends Ec2RequestAbstract
      * @param array $opt - the optional parameters to be sent.
      * @return CFResponse $response
      */
-    protected function send_request(\AmazonEC2 $ec2, array $opt) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt) 
     {
-        $ec2->set_region((String)$this->m_region);
-        $response = $ec2->describe_instances($opt);
+        $response = $ec2->describeInstances($opt);
         
-        if ($response->isOK())
-        {            
-            foreach($response->body->reservationSet->item as $item)
+        $reservations = $response->get('Reservations');
+        
+        foreach ($reservations as $reservation)
+        {
+            $instances = $reservation['Instances'];
+            
+            foreach ($instances as $instanceSetItem)
             {
-                foreach ($item->instancesSet->item as $instanceSetItem)
-                {
-                    $ec2Instance = \iRAP\AwsWrapper\Objects\Ec2Instance::create_from_aws_item($instanceSetItem);
-                    $this->m_instances[] = $ec2Instance;
-                    $this->m_returned_instance_ids[] = $ec2Instance->get_instance_id();     
-                }
+                $ec2Instance = \iRAP\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($instanceSetItem);
+                $this->m_instances[] = $ec2Instance;
+                $this->m_returned_instance_ids[] = $ec2Instance->getInstanceId();     
             }
         }
         
@@ -97,7 +89,7 @@ class RequestDescribeInstances extends Ec2RequestAbstract
      */
     public function add_instance_id($instanceId)
     {
-        $this->m_instance_ids[$instanceId] = 1;
+        $this->m_instance_ids[] = $instanceId;
     }
     
     
@@ -108,9 +100,8 @@ class RequestDescribeInstances extends Ec2RequestAbstract
      */
     public function set_filter(\iRAP\AwsWrapper\Objects\AmazonFilter $filter)
     {
-        $this->m_filter = $filter;
+        $this->m_filters = $filter;
     }
-    
     
     
     /**
@@ -127,7 +118,6 @@ class RequestDescribeInstances extends Ec2RequestAbstract
      * Fetch just the array list of instance ids that hare being described.
      * @return Array<String> - list of instance ids being described.
      */
-    public function get_instance_ids() { return $this->m_returned_instance_ids; }
-
+    public function getInstanceIds() { return $this->m_returned_instance_ids; }
 }
 
