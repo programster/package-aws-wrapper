@@ -165,6 +165,37 @@ class S3Client
     
     
     /**
+     * Returns some or all (up to 1000] of the objects in a bucket. You can use the request 
+     * parameters as selection criteria to return a subset of the objects in a bucket.
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#listobjects
+     * @param string $bucket - the name of the bucket to get the objects of.
+     * @param string $prefix - Limits the response to keys that begin with the specified prefix.
+     * @param int $maxKeys - Sets the maximum number of keys returned in the response. 
+     *                        The response might contain fewer keys but will never contain more.
+     * @param string $delimiter - A delimiter is a character you use to group keys.
+     */
+    public function listObjects($bucket, $prefix="", $maxKeys=1000, $delimiter="")
+    {
+        $params = array(
+            'Bucket'        => $bucket, // REQUIRED
+            'MaxKeys'       => $maxKeys,
+        );
+        
+        if ($prefix !== "")
+        {
+            $params['Prefix'] = $prefix;
+        }
+        
+        if ($delimiter !== "")
+        {
+            $params['Delimiter'] = $delimiter;
+        }
+        
+        return $this->m_client->listObjects($params);
+    }
+    
+    
+    /**
      * Create a bucket
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#createbucket
      * @return \Aws\Result

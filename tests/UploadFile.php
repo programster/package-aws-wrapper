@@ -11,7 +11,7 @@ function main()
 {
     $apiKey = API_KEY;
     $secret = API_SECRET;
-    $region = \iRAP\AwsWrapper\Enums\AwsRegion::create_EU_W1();
+    $region = \iRAP\AwsWrapper\Enums\AwsRegion::create_from_string(API_REGION);
     
     $bucketName = "awswrapper-testing";
     
@@ -60,6 +60,10 @@ function main()
     );
     
     print_r($secondUploadResult);
+    
+    # list files
+    $listObjectsResponse = $s3Client->listObjects($bucketName);
+    print_r($listObjectsResponse);
     
     # Delete the file.
     

@@ -107,6 +107,32 @@ class AwsRegion
         return self::create_SA_E1();
     }
     
+    
+    public static function create_from_string($regionString)
+    {
+        $regionString = strtolower($regionString);
+        
+        $allowedRegions = array(
+            'sa-east-1',
+            'us-gov-west-1',
+            'ap-northeast-1',
+            'ap-southeast-2',
+            'ap-southeast-1',
+            'eu-west-1',
+            'us-west-2',
+            'us-east-1'
+        );
+        
+        if (!in_array($regionString, $allowedRegions))
+        {
+            throw new \Exception('Invalid region specified: ' . $regionString);
+        }
+        
+        $regionObj = new AwsRegion($regionString);
+        return $regionObj;
+    }
+    
+    
     private function __construct($region)
     {
         $this->m_region = $region;
