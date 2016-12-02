@@ -68,7 +68,7 @@ class S3Client
         );
         
         $result = $this->m_client->putObject($params);
-
+        
         return $result;
     }
     
@@ -117,7 +117,7 @@ class S3Client
             (string) $acl, 
             $options
         );
-
+        
         return $result;
     }
     
@@ -134,6 +134,34 @@ class S3Client
         $dest = 's3://' . $bucketName . $remotePath;
         $manager = new \Aws\S3\Transfer($this->m_client, $localDirectoryPath, $dest);
         $manager->transfer();
+    }
+    
+    
+    /**
+     * Download a file from s3. This is only really useful for private files and will generate
+     * a pre signed request from the url. If your files are not private, you can just use the 
+     * ObjectURL property in the returned object when you uploaded the file.
+     * 
+     * Reference:
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-presigned-url.html
+     * 
+     * @param string $bucket - the bucket that we want to store our file in.
+     * @param string $key - the name of the file in the bucket or the path within the bucket.
+     * @param string $downloadFilepath - where to stick the downloaded file including the name.
+     * 
+     * @WARNING - this will overwrite the file if it already exists!
+     */
+    public function downloadFile($bucket, $key, $downloadFilepath)
+    {
+        $cmd = $this->m_client->getCommand('GetObject', [
+            'Bucket' => $bucket,
+            'Key'    => $key
+        ]);
+        
+        $expires = '+1 minutes';
+        $request = $this->m_client->createPresignedRequest($cmd, $expires);
+        $presignedUrl = (string) $request->getUri();
+        file_put_contents($downloadFilepath, fopen($presignedUrl, 'r'));
     }
     
     
@@ -226,7 +254,7 @@ class S3Client
         
         // Where the files will be source from
         $source = 's3://' . $bucketName;
-
+        
         $manager = new \Aws\S3\Transfer($this->m_client, $source, $destination);
         $manager->transfer();
     }
