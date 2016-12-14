@@ -161,7 +161,14 @@ class S3Client
         $expires = '+1 minutes';
         $request = $this->m_client->createPresignedRequest($cmd, $expires);
         $presignedUrl = (string) $request->getUri();
-        file_put_contents($downloadFilepath, fopen($presignedUrl, 'r'));
+        $fileHandle = @fopen($presignedUrl, 'r');
+        
+        if ($fileHandle === FALSE)
+        {
+            throw new \Exception("Failed to find/open the S3 file.");
+        }
+        
+        file_put_contents($downloadFilepath, $fileHandle);
     }
     
     
