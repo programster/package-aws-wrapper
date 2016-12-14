@@ -164,6 +164,32 @@ class S3Client
         file_put_contents($downloadFilepath, fopen($presignedUrl, 'r'));
     }
     
+    /**
+     * Get a pre-signed download link from s3. This is only really useful for private files and will generate
+     * a pre signed request from the url. If your files are not private, you can just use the 
+     * ObjectURL property in the returned object when you uploaded the file.
+     * 
+     * Reference:
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-presigned-url.html
+     * 
+     * @param string $bucket - the bucket that we want to store our file in.
+     * @param string $key - the name of the file in the bucket or the path within the bucket.
+     * @param int $ttl - lifetime of the link in seconds
+     * 
+     */
+    public function createPresignedRequest($bucket, $key, $ttl)
+    {
+        $cmd = $this->m_client->getCommand('GetObject', [
+            'Bucket' => $bucket,
+            'Key'    => $key
+        ]);
+        
+        $expires = '+' . $ttl . ' seconds';
+        $request = $this->m_client->createPresignedRequest($cmd, $expires);
+        $presignedUrl = (string) $request->getUri();
+        return $presignedUrl;
+    }
+    
     
     /**
      * Delete a bucket and all of its contents from S3
