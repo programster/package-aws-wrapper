@@ -171,6 +171,7 @@ class S3Client
         file_put_contents($downloadFilepath, $fileHandle);
     }
     
+    
     /**
      * Get a pre-signed download link from s3. This is only really useful for private files and will generate
      * a pre signed request from the url. If your files are not private, you can just use the 
