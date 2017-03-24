@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.3.0",
         "irap/core-libs": "1.1.*",
-        "aws/aws-sdk-php" : "3.3.*"
+        "aws/aws-sdk-php" : "3.24.*"
     },
     "autoload": {
         "psr-4": {
@@ -27,7 +27,6 @@
             "iRAP\\AwsWrapper\\Requests\\": "requests/",
             "iRAP\\AwsWrapper\\S3\\": "S3/",
             "iRAP\\AwsWrapper\\Ec2\\": "Ec2/"
-            
         }
     }
 }
