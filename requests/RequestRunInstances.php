@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
 /*
  * Class for spot instance requests.

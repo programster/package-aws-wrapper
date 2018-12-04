@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
 /*
  * Represents a block device that can be attached to an aws instance.

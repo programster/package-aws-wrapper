@@ -1,21 +1,20 @@
 {
-    "name": "irap/aws-wrapper",
+    "name": "programster/aws-wrapper",
     "type": "library",
     "description": "Package for rapidly developing models that represent mysql tables. Tables must have an id field.",
     "keywords": ["mysql", "mysqli","models"],
-    "homepage": "http://www.irap.org/",
+    "homepage": "https://github.com/iRAP-software/package-aws-wrapper",
     "license": "MIT",
     "authors": [
         {
             "name": "Stuart Page",
-            "email": "stuart.page@irap.org",
-            "homepage": "http://www.irap.org/",
+            "email": "sdpagent@gmail.com",
+            "homepage": "blog.programster.org",
             "role": "Developer"
         }
     ],
-    "repositories": [ { "type": "composer", "url": "http://satis.irap-dev.org/" } ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=7.0.0",
         "irap/core-libs": "1.1.*",
         "aws/aws-sdk-php" : "3.24.*",
         "ext-libxml" : "*",
@@ -23,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "iRAP\\AwsWrapper\\": "",
-            "iRAP\\AwsWrapper\\Enums\\": "enums/",
-            "iRAP\\AwsWrapper\\Objects\\": "objects/",
-            "iRAP\\AwsWrapper\\Requests\\": "requests/",
-            "iRAP\\AwsWrapper\\S3\\": "S3/",
-            "iRAP\\AwsWrapper\\Ec2\\": "Ec2/"
+            "Programster\\AwsWrapper\\": "",
+            "Programster\\AwsWrapper\\Enums\\": "enums/",
+            "Programster\\AwsWrapper\\Objects\\": "objects/",
+            "Programster\\AwsWrapper\\Requests\\": "requests/",
+            "Programster\\AwsWrapper\\S3\\": "S3/",
+            "Programster\\AwsWrapper\\Ec2\\": "Ec2/"
         }
     }
 }

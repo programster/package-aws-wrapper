@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
 /*
  * Object to cancel spot instance requests.

@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
 /*
  * A single private IP that makes up part of the PrivateIpAddresses in a NetworkInterfaceSet

@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
 /*
  * An object to represent the Placement of an EC2 instance

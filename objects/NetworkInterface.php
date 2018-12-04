@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
 /*
  * A single network interface that can make up part of a networkInterface set in a

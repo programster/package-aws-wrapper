@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
 /*
  * A filter for requests such as describe regions in order to reduce the nubmer of things that are

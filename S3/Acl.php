@@ -11,7 +11,7 @@
  * https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html
  */
 
-namespace iRAP\AwsWrapper\S3;
+namespace Programster\AwsWrapper\S3;
 
 
 class Acl

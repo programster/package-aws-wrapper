@@ -6,11 +6,12 @@
  * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html
  */
 
-namespace iRAP\AwsWrapper\Ec2;
+namespace Programster\AwsWrapper\Ec2;
 
 class Ec2Client
 {
     private $m_client;
+    
     
     public function __construct($apiKey, $apiSecret, \iRAP\AwsWrapper\Enums\AwsRegion $region)
     {
@@ -26,42 +27,6 @@ class Ec2Client
         );
         
         $this->m_client = new \Aws\Ec2\Ec2Client($params);
-    }
-    
-    
-    /**
-     * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#createimage
-     */
-    public function createImage()
-    {
-        
-    }
-    
-    
-    public function createKeyPair()
-    {
-        
-    }
-    
-    
-    /**
-     * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#createsnapshot
-     */
-    public function createSnapshot()
-    {
-        
-    }
-    
-    
-    public function deleteSnapshot()
-    {
-        
-    }
-    
-    
-    public function cancelSpotInstanceRequests()
-    {
-        
     }
     
     
@@ -91,33 +56,6 @@ class Ec2Client
     public function requestOnDemandInstances()
     {
         $this->runInstances();
-    }
-    
-    
-    public function requestSpotInstances()
-    {
-        
-    }
-    
-    
-    public function requestSpotFleet()
-    {
-        
-    }
-    
-    
-    /**
-     * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#startinstances
-     */
-    public function startInstances()
-    {
-        
-    }
-    
-    
-    public function stopInstances()
-    {
-        
     }
     
     

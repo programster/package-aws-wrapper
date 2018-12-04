@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace iRAP\AwsWrapper;
+namespace Programster\AwsWrapper;
 
 class AwsWrapper
 {

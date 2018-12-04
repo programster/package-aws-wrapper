@@ -1,6 +1,6 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
 /*
  * The request to retrieve information about spot instances.

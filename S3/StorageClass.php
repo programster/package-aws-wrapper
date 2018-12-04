@@ -4,7 +4,7 @@
  *
  */
 
-namespace iRAP\AwsWrapper\S3;
+namespace Programster\AwsWrapper\S3;
 
 class StorageClass
 {

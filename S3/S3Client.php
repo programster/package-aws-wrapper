@@ -5,7 +5,7 @@
  * https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-transfer.html?highlight=upload
  */
 
-namespace iRAP\AwsWrapper\S3;
+namespace Programster\AwsWrapper\S3;
 
 class S3Client
 {
