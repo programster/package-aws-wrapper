@@ -2,7 +2,7 @@
 
 namespace iRAP\AwsWrapper\Objects;
 
-/* 
+/*
  * A single private IP that makes up part of the PrivateIpAddresses in a NetworkInterfaceSet
  * http://docs.aws.amazon.com/AWSSDKforPHP/latest/#m=AmazonEC2/request_spot_instances
  */
@@ -15,19 +15,17 @@ class PrivateIp
     
     
     /**
-     * 
+     *
      * @param type $ip - the actual ip address to set. e.g. 54.0.0.1
      * @param bool $primary - whether this is the primpary private ip
      */
     public function __construct($ip, $primary)
     {
-        if (filter_var($ip, FILTER_VALIDATE_IP) !== FALSE)
-        {
+        if (filter_var($ip, FILTER_VALIDATE_IP) !== false) {
             throw new \Exception('PrivateIp - invalid ip: ' . $ip);
         }
         
-        if (is_bool($primary) !== TRUE)
-        {
+        if (is_bool($primary) !== true) {
             throw new \Exception('PrivateIp - primary needs to be a bool');
         }
         

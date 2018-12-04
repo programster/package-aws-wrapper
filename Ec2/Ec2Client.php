@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Client for interfacing with AWS Ec2
  * You may find this useful:
  * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html
@@ -66,7 +66,7 @@ class Ec2Client
     
     
     /**
-     * 
+     *
      * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#describeinstances
      */
     public function describeInstances(\iRAP\AwsWrapper\Requests\RequestDescribeInstances $request)
@@ -81,7 +81,7 @@ class Ec2Client
      */
     public function runInstances(\iRAP\AwsWrapper\Requests\RequestRunInstances $request)
     {
-        return $request->send($this->m_client);        
+        return $request->send($this->m_client);
     }
     
     

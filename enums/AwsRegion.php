@@ -2,7 +2,7 @@
 
 namespace iRAP\AwsWrapper\Enums;
 
-/* 
+/*
  * This is an 'enum' representing the regions in amazon.
  */
 
@@ -123,8 +123,7 @@ class AwsRegion
             'us-east-1'
         );
         
-        if (!in_array($regionString, $allowedRegions))
-        {
+        if (!in_array($regionString, $allowedRegions)) {
             throw new \Exception('Invalid region specified: ' . $regionString);
         }
         
@@ -139,7 +138,7 @@ class AwsRegion
     }
     
     
-    public function __toString() 
+    public function __toString()
     {
         return $this->m_region;
     }

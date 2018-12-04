@@ -2,7 +2,7 @@
 
 namespace iRAP\AwsWrapper\Objects;
 
-/* 
+/*
  * Represents a block device that can be attached to an aws instance.
  */
 
@@ -44,8 +44,7 @@ class BlockDevice
     {
         $ebs = array();
         
-        foreach ($this->m_ebsDevices as $ebsDevice)
-        {
+        foreach ($this->m_ebsDevices as $ebsDevice) {
             /* @var $ebsDevice Ebs */
             $ebs[] = $ebsDevice->to_array();
         }

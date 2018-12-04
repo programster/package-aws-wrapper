@@ -2,7 +2,7 @@
 
 namespace iRAP\AwsWrapper\Requests;
 
-/* 
+/*
  * Object to cancel spot instance requests.
  */
 
@@ -25,8 +25,8 @@ class RequestCancelSpotInstance extends Ec2RequestAbstract
     
     
     /**
-     * There are no options that we need to add. The generic ones such as curlopt are added by 
-     * parent 
+     * There are no options that we need to add. The generic ones such as curlopt are added by
+     * parent
      * @return Array - all the options array parameters for cancel_spot_instance_requests.
      */
     protected function getOptionsArray()

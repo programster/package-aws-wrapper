@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * You may find this useful:
  * https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-transfer.html?highlight=upload
  */
@@ -31,10 +31,10 @@ class S3Client
     /**
      * Upload a file to s3
      * https://docs.aws.amazon.com/AmazonS3/latest/dev/UploadObjSingleOpPHP.html
-     * 
+     *
      * @param string $bucket - the bucket that we want to store our file in.
      * @param string $localFilepath - the absolutepath to where the file we want to upload currently is
-     * @param string $remoteFilepath - the path you want the file to have inside the bucket, e.g. 
+     * @param string $remoteFilepath - the path you want the file to have inside the bucket, e.g.
      *                                data/data1.csv where "data" is NOT the name of the bucket.
      * @param Acl $acl - the ACL to store the file with. Refer to the Acl Object.
      * @param StorageClass $storageClass - an instance of the StorageClass.
@@ -42,18 +42,18 @@ class S3Client
      * @param array $metadata - any name/value pairs you want assosciated with the file.
      * @WARNING - this will overwrite the file if it already exists!
      */
-    public function uploadFile($bucket, 
-                               $localFilepath, 
-                               $remoteFilepath, 
-                               Acl $acl, 
-                               StorageClass $storageClass, 
-                               $mimeType, 
-                               $metadata=array())
-    {
+    public function uploadFile(
+        $bucket,
+        $localFilepath,
+        $remoteFilepath,
+        Acl $acl,
+        StorageClass $storageClass,
+        $mimeType,
+        $metadata = array()
+    ) {
         # Strip off the beginning / if they have provided one. Otherwise you end up with a folder
         # with no name at the top of your bucket.
-        if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/'))
-        {
+        if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/')) {
             $remoteFilepath = substr($remoteFilepath, 1);
         }
         
@@ -75,12 +75,12 @@ class S3Client
     
     /**
      * Upload a file to s3
-     * Create a file in s3 with the provided string body. 
+     * Create a file in s3 with the provided string body.
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/class-Aws.S3.S3Client.html#_upload
-     * 
+     *
      * @param string $bucket - the bucket that we want to store our file in.
      * @param string $body - the string content or stream of something  to create file from
-     * @param string $remoteFilepath - the path you want the file to have inside the bucket, e.g. 
+     * @param string $remoteFilepath - the path you want the file to have inside the bucket, e.g.
      *                                data/data1.csv where "data" is NOT the name of the bucket.
      * @param Acl $acl - the ACL to store the file with. Refer to the Acl Object.
      * @param StorageClass $storageClass - an instance of the StorageClass.
@@ -89,12 +89,18 @@ class S3Client
      * @param array $metadata - optional name/value pairs you want assosciated with the file.
      * @WARNING - this will overwrite the file if it already exists!
      */
-    public function createFile($bucket, $body, $remoteFilepath, Acl $acl, StorageClass $storageClass, $mimeType='', $metadata=array())
-    {
+    public function createFile(
+        $bucket,
+        $body,
+        $remoteFilepath,
+        Acl $acl,
+        StorageClass $storageClass,
+        $mimeType = '',
+        $metadata = array()
+    ) {
         # Strip off the beginning / if they have provided one. Otherwise you end up with a folder
         # with no name at the top of your bucket.
-        if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/'))
-        {
+        if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/')) {
             $remoteFilepath = substr($remoteFilepath, 1);
         }
         
@@ -103,8 +109,7 @@ class S3Client
             'Metadata'     => $metadata,
         );
         
-        if ($mimeType !== '')
-        {
+        if ($mimeType !== '') {
             $params['ContentType'] = $mimeType;
         }
         
@@ -112,9 +117,9 @@ class S3Client
         
         $result = $this->m_client->upload(
             $bucket,
-            $remoteFilepath, 
-            $body, 
-            (string) $acl, 
+            $remoteFilepath,
+            $body,
+            (string) $acl,
             $options
         );
         
@@ -129,7 +134,7 @@ class S3Client
      * @param string $remotePath - a path to stick the files in from inside the bucket. E.g.
      *                             '/subfolder1/subfolder2'. This MUST start with /
      */
-    public function uploadDirectory($localDirectoryPath, $bucketName, $remotePath='/')
+    public function uploadDirectory($localDirectoryPath, $bucketName, $remotePath = '/')
     {
         $dest = 's3://' . $bucketName . $remotePath;
         $manager = new \Aws\S3\Transfer($this->m_client, $localDirectoryPath, $dest);
@@ -139,16 +144,16 @@ class S3Client
     
     /**
      * Download a file from s3. This is only really useful for private files and will generate
-     * a pre signed request from the url. If your files are not private, you can just use the 
+     * a pre signed request from the url. If your files are not private, you can just use the
      * ObjectURL property in the returned object when you uploaded the file.
-     * 
+     *
      * Reference:
      * https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-presigned-url.html
-     * 
+     *
      * @param string $bucket - the bucket that we want to store our file in.
      * @param string $key - the name of the file in the bucket or the path within the bucket.
      * @param string $downloadFilepath - where to stick the downloaded file including the name.
-     * 
+     *
      * @WARNING - this will overwrite the file if it already exists!
      */
     public function downloadFile($bucket, $key, $downloadFilepath)
@@ -163,8 +168,7 @@ class S3Client
         $presignedUrl = (string) $request->getUri();
         $fileHandle = @fopen($presignedUrl, 'r');
         
-        if ($fileHandle === FALSE)
-        {
+        if ($fileHandle === false) {
             throw new \Exception("Failed to find/open the S3 file.");
         }
         
@@ -174,16 +178,16 @@ class S3Client
     
     /**
      * Get a pre-signed download link from s3. This is only really useful for private files and will generate
-     * a pre signed request from the url. If your files are not private, you can just use the 
+     * a pre signed request from the url. If your files are not private, you can just use the
      * ObjectURL property in the returned object when you uploaded the file.
-     * 
+     *
      * Reference:
      * https://docs.aws.amazon.com/aws-sdk-php/v3/guide/service/s3-presigned-url.html
-     * 
+     *
      * @param string $bucket - the bucket that we want to store our file in.
      * @param string $key - the name of the file in the bucket or the path within the bucket.
      * @param int $ttl - lifetime of the link in seconds
-     * 
+     *
      */
     public function createPresignedRequest($bucket, $key, $ttl)
     {
@@ -227,29 +231,27 @@ class S3Client
     
     
     /**
-     * Returns some or all (up to 1000] of the objects in a bucket. You can use the request 
+     * Returns some or all (up to 1000] of the objects in a bucket. You can use the request
      * parameters as selection criteria to return a subset of the objects in a bucket.
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#listobjects
      * @param string $bucket - the name of the bucket to get the objects of.
      * @param string $prefix - Limits the response to keys that begin with the specified prefix.
-     * @param int $maxKeys - Sets the maximum number of keys returned in the response. 
+     * @param int $maxKeys - Sets the maximum number of keys returned in the response.
      *                        The response might contain fewer keys but will never contain more.
      * @param string $delimiter - A delimiter is a character you use to group keys.
      */
-    public function listObjects($bucket, $prefix="", $maxKeys=1000, $delimiter="")
+    public function listObjects($bucket, $prefix = "", $maxKeys = 1000, $delimiter = "")
     {
         $params = array(
             'Bucket'        => $bucket, // REQUIRED
             'MaxKeys'       => $maxKeys,
         );
         
-        if ($prefix !== "")
-        {
+        if ($prefix !== "") {
             $params['Prefix'] = $prefix;
         }
         
-        if ($delimiter !== "")
-        {
+        if ($delimiter !== "") {
             $params['Delimiter'] = $delimiter;
         }
         
@@ -281,8 +283,7 @@ class S3Client
      */
     public function downloadBucket($bucketName, $destination)
     {
-        if (!is_dir($destination))
-        {
+        if (!is_dir($destination)) {
             throw new Exception('Destination needs to be a path to a folder,');
         }
         

@@ -24,8 +24,8 @@ class RequestRunInstances extends Ec2RequestAbstract
     
     /**
      * Create the RunInstancesRequest
-     * 
-     * @param int maxCount - Maximum number of instances to launch. If the value is more than 
+     *
+     * @param int maxCount - Maximum number of instances to launch. If the value is more than
      *                       Amazon EC2 can launch, the largest possible number above minCount will
      *                       be launched instead. Between 1 and the maximum number allowed for your
      *                       account (default: 20).
@@ -34,12 +34,12 @@ class RequestRunInstances extends Ec2RequestAbstract
      * @param LaunchSpecification $launchSpecification - the launch specification of the request
      *                                                   refer to that object for details.
      */
-    public function __construct(\iRAP\AwsWrapper\Objects\LaunchSpecification $launchSpecification,
-                                $maxCount, 
-                                $minCount)
-    {
-        if ($minCount <= 0)
-        {
+    public function __construct(
+        \iRAP\AwsWrapper\Objects\LaunchSpecification $launchSpecification,
+        $maxCount,
+        $minCount
+    ) {
+        if ($minCount <= 0) {
             # AWS itself throws an error if you set minimum to 0 which is odd IMO. I would figure
             # 0 was a legitimate request to spawn as many as possible but dont throw an error if
             # cant even fill one.
@@ -54,7 +54,7 @@ class RequestRunInstances extends Ec2RequestAbstract
     
     /**
      * Disable the possibility for these instances to be terminated from an API request.
-     * @param bool $flag - optionally set to false if you want to disable which is already 
+     * @param bool $flag - optionally set to false if you want to disable which is already
      *                     default setting.
      */
     public function disableApiTermination($flag = true)
@@ -83,14 +83,11 @@ class RequestRunInstances extends Ec2RequestAbstract
      *                     stopping ebs volumes on ec2 termination.
      * @return void.
      */
-    public function terminateEbsOnTermination($flag=true)
+    public function terminateEbsOnTermination($flag = true)
     {
-        if ($flag)
-        {
+        if ($flag) {
             $this->m_terminateEbsOnTermination = "terminate";
-        }
-        else
-        {
+        } else {
             $this->m_terminateEbsOnTermination = "stop";
         }
     }
@@ -115,8 +112,7 @@ class RequestRunInstances extends Ec2RequestAbstract
         
         $options = array_merge($options, $this->m_launchSpecification->toArray());
         
-        if (isset($this->m_clientToken))
-        {
+        if (isset($this->m_clientToken)) {
             $options['ClientToken'] = $this->m_clientToken;
         }
         
@@ -130,14 +126,13 @@ class RequestRunInstances extends Ec2RequestAbstract
      * @param \Aws\Ec2\Ec2Client $ec2Client - the ec2 client (from sdk) that actaully makes the requst
      * @param array $options - the optional array to put into the request generated from this object.
      */
-    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2Client, array $options) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2Client, array $options)
     {
         $response = $ec2Client->runInstances($options);
         /* @var $response \Aws\Result */
         $ec2InstanceStdObjs = $response->get('Instances');
         
-        foreach ($ec2InstanceStdObjs as $ec2StdObj)
-        {
+        foreach ($ec2InstanceStdObjs as $ec2StdObj) {
             $this->m_generatedInstances[] = \iRAP\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($ec2StdObj);
         }
         
@@ -156,9 +151,9 @@ class RequestRunInstances extends Ec2RequestAbstract
     
     
     /**
-     * Run this method to have the instance terminate when it is shutdown, rather than just 
+     * Run this method to have the instance terminate when it is shutdown, rather than just
      * being held in a stopped state. Note that you are not charged for the instance in the stopped
-     * state and this is the default behaviour when shutdown. 
+     * state and this is the default behaviour when shutdown.
      * If termination on shutdown is enabled, the API can essentially terminate by shutting it down
      * even if DisableApiTermination is set
      */
@@ -169,10 +164,13 @@ class RequestRunInstances extends Ec2RequestAbstract
     
     
     /**
-     * Fetch the instances that have been launched from this request. 
-     * @param void 
+     * Fetch the instances that have been launched from this request.
+     * @param void
      * @return Array<Ec2Instance> - array list of ec2Instance objects.
      */
-    public function getSpawnedInstances() { return $this->m_generatedInstances; }
+    public function getSpawnedInstances()
+    {
+        return $this->m_generatedInstances;
+    }
 }
 

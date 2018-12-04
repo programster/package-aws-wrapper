@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * This object represents an ec2 instance as described from a describeInstances request.
  */
 
@@ -45,7 +45,9 @@ class Ec2Instance
     private $m_ebs_optimized; # flag
     private $m_security_groups; # array of objects with GroupName and GroupId
     
-    private function __construct() {}
+    private function __construct()
+    {
+    }
     
     
     /**
@@ -78,23 +80,19 @@ class Ec2Instance
         
         $ec2Instance->m_monitoring_state            = $item['Monitoring']['State']; # e.g. "disabled"
         
-        if (isset($item['SubnetId']))
-        {
+        if (isset($item['SubnetId'])) {
             $ec2Instance->m_subnet_id                   = $item['SubnetId']; # e.g. "subnet-f7b4479d"
         }
         
-        if (isset($item['VpcId']))
-        {
+        if (isset($item['VpcId'])) {
             $ec2Instance->m_vpc_id                      = $item['VpcId']; # e.g. vpc-f6b4479c"
         }
         
-        if (isset($item['PrivateIpAddress']))
-        {
+        if (isset($item['PrivateIpAddress'])) {
             $ec2Instance->m_private_ip_address          = $item['PrivateIpAddress']; # "172.31.33.19"
         }
         
-        if (isset($item['StateReason']))
-        {
+        if (isset($item['StateReason'])) {
             $ec2Instance->m_state_reason_code           = $item['StateReason']['Code']; # "pending"
             $ec2Instance->m_state_reason_message        = $item['StateReason']['Message']; # "pending"
         }
@@ -107,8 +105,7 @@ class Ec2Instance
         $ec2Instance->m_client_token                = $item['ClientToken'];
         $ec2Instance->m_security_groups             = $item['SecurityGroups'];
         
-        if (isset($item['SourceDestCheck']))
-        {
+        if (isset($item['SourceDestCheck'])) {
             $ec2Instance->m_source_dest_check           = $item['SourceDestCheck']; # boolean value
         }
         
@@ -129,11 +126,23 @@ class Ec2Instance
     }
     
     
-    public function getInstanceId()     { return $this->m_instance_id; }
-    public function getStateString()    { return $this->m_instance_state_name; }
-    public function getDeploymentTime() { return $this->m_launch_time; }
+    public function getInstanceId()
+    {
+        return $this->m_instance_id;
+    }
+    public function getStateString()
+    {
+        return $this->m_instance_state_name;
+    }
+    public function getDeploymentTime()
+    {
+        return $this->m_launch_time;
+    }
     
     # These accessors may not have a value.
-    public function getSpotInstanceRequestId() { return $this->m_spot_instance_request_id; }
+    public function getSpotInstanceRequestId()
+    {
+        return $this->m_spot_instance_request_id;
+    }
 }
 

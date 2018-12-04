@@ -2,7 +2,7 @@
 
 namespace iRAP\AwsWrapper\Objects;
 
-/* 
+/*
  * Launch specification of instances.
  * This class is mainly based upon:
  * http://docs.aws.amazon.com/AWSSDKforPHP/latest/#m=AmazonEC2/request_spot_instances
@@ -42,18 +42,15 @@ class LaunchSpecification
     
     
     /**
-     * Set the instance to be EBS optimized for an extra fee. (EBS storage is over a network and 
+     * Set the instance to be EBS optimized for an extra fee. (EBS storage is over a network and
      * this allows better IO)
      * @param type $flag
      */
-    public function setEbsOptimized($flag=true)
+    public function setEbsOptimized($flag = true)
     {
-        if ($flag)
-        {
+        if ($flag) {
             $this->m_ebsOptimized = true;
-        }
-        else
-        {
+        } else {
             $this->m_ebsOptimized = false;
         }
     }
@@ -95,16 +92,15 @@ class LaunchSpecification
     
     
     /**
-     * Set some optional data on the instance, specific to a user’s application, to provide in the 
-     * launch request. All instances that collectively comprise the launch request have access to 
+     * Set some optional data on the instance, specific to a user’s application, to provide in the
+     * launch request. All instances that collectively comprise the launch request have access to
      * this data. User data is never returned through API responses.
      * @param String $userData
      * @throws Exception
      */
     public function setUserData($userData)
     {
-        if (!is_string($userData))
-        {
+        if (!is_string($userData)) {
             throw new \Exception('User data must be a string.');
         }
         
@@ -113,8 +109,8 @@ class LaunchSpecification
     
     
     /**
-     * Specifiy the ID of the RAM disk to select. 
-     * Some kernels require additional drivers at launch. Check the kernel requirements for 
+     * Specifiy the ID of the RAM disk to select.
+     * Some kernels require additional drivers at launch. Check the kernel requirements for
      * information on whether or not you need to specify a RAM disk and search for the kernel ID.
      * @param type $ramDiskId
      * @return void
@@ -152,14 +148,14 @@ class LaunchSpecification
      * Enable monitoring.
      * @param type $flag
      */
-    public function setMonitoring($flag=true)
+    public function setMonitoring($flag = true)
     {
         $this->m_monitoringEnabled = $flag;
     }
     
     
     /**
-     * Specifiy the subnet ID within which to launch the instance(s) for Amazon Virtual Private 
+     * Specifiy the subnet ID within which to launch the instance(s) for Amazon Virtual Private
      * Cloud.
      * @param string $subnetId
      */
@@ -181,43 +177,35 @@ class LaunchSpecification
             'InstanceType'  => (String)$this->m_instanceType,
         );
         
-        if (isset($this->m_keyName))
-        {
+        if (isset($this->m_keyName)) {
             $arrayForm['KeyName'] = $this->m_keyName;
         }
         
-        if (isset($this->m_securityGroup))
-        {
+        if (isset($this->m_securityGroup)) {
             $arrayForm['SecurityGroupIds'] = array($this->m_securityGroup);
         }
         
-        if (isset($this->m_userData))
-        {
+        if (isset($this->m_userData)) {
             $arrayForm['UserData'] = $this->m_userData;
         }
         
-        if (isset($this->m_placement))
-        {
+        if (isset($this->m_placement)) {
             /* @var $this->m_placement Placement */
             $arrayForm['Placement'] = $this->m_placement->toArray();
         }
         
-        if (isset($this->m_kernelId))
-        {
+        if (isset($this->m_kernelId)) {
             $arrayForm['KernelId'] = $this->m_kernelId;
         }
         
-        if (isset($this->m_ramDiskId))
-        {
+        if (isset($this->m_ramDiskId)) {
             $arrayForm['RamdiskId'] = $this->m_ramDiskId;
         }
         
-        if (count($this->m_blockDevices) > 0)
-        {
+        if (count($this->m_blockDevices) > 0) {
             $expandedBlockDevices = array();
             
-            foreach ($this->m_blockDevices as $blockDevice)
-            {
+            foreach ($this->m_blockDevices as $blockDevice) {
                 /* @var $blockDevice BlockDevice */
                 $expandedBlockDevices[] = $blockDevice->toArray();
             }
@@ -226,18 +214,15 @@ class LaunchSpecification
         }
         
         
-        if ($this->m_monitoringEnabled)
-        {
+        if ($this->m_monitoringEnabled) {
             $arrayForm['Monitoring'] = array('Enabled'=> $this->m_monitoringEnabled);
         }
         
         
-        if (count($this->m_networkInterfaces) > 0)
-        {
+        if (count($this->m_networkInterfaces) > 0) {
             $networkInterfaces = array();
             
-            foreach ($this->m_networkInterfaces as $index => $network_interface)
-            {
+            foreach ($this->m_networkInterfaces as $index => $network_interface) {
                 /* @var $network_interface NetworkInterface */
                 $networkInterfaceArrayForm = $network_interface->toArray();
                 $networkInterfaceArrayForm['DeviceIndex'] = $index;
@@ -245,22 +230,17 @@ class LaunchSpecification
             }
             
             $arrayForm['NetworkInterfaces'] = $networkInterfaces;
-        }
-        else
-        {
+        } else {
             # Cannot set the subnet ID if we have defined network interfaces.
-            if (isset($this->m_subnetId))
-            {
+            if (isset($this->m_subnetId)) {
                 $arrayForm['SubnetId'] = $this->m_subnetId;
             }
         }
         
-        if (count($this->m_iamProfile) > 0)
-        {
+        if (count($this->m_iamProfile) > 0) {
             $iamProfiles = array();
             
-            foreach ($this->m_iamProfile as $profile)
-            {
+            foreach ($this->m_iamProfile as $profile) {
                 /* @var $profile IamInstanceProfile */
                 $iamProfiles[] = $profile->toArray();
             }
@@ -268,8 +248,7 @@ class LaunchSpecification
             $arrayForm['IamInstanceProfile'] = $iamProfiles;
         }
         
-        if (isset($this->m_ebsOptimized) && $this->m_ebsOptimized == true)
-        {
+        if (isset($this->m_ebsOptimized) && $this->m_ebsOptimized == true) {
             $arrayForm['EbsOptimized'] = $this->m_ebsOptimized;
         }
         
@@ -290,5 +269,8 @@ class LaunchSpecification
     
     
     # Accessors
-    public function getImageId() { return $this->m_image_id; }
+    public function getImageId()
+    {
+        return $this->m_image_id;
+    }
 }

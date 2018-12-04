@@ -2,12 +2,12 @@
 
 /*
  * ACL stands for Access Control List.
- * Amazon S3 Access Control Lists (ACLs) enable you to manage access to buckets and objects. 
- * Each bucket and object has an ACL attached to it as a subresource. It defines which AWS accounts 
- * or groups are granted access and the type of access. When a request is received against a 
- * resource, Amazon S3 checks the corresponding ACL to verify the requester has the necessary 
+ * Amazon S3 Access Control Lists (ACLs) enable you to manage access to buckets and objects.
+ * Each bucket and object has an ACL attached to it as a subresource. It defines which AWS accounts
+ * or groups are granted access and the type of access. When a request is received against a
+ * resource, Amazon S3 checks the corresponding ACL to verify the requester has the necessary
  * access permissions.
- * 
+ *
  * https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html
  */
 
@@ -72,6 +72,9 @@ class Acl
      * Convert this object to a string.
      * @return String
      */
-    public function __toString() { return $this->m_string; }
+    public function __toString()
+    {
+        return $this->m_string;
+    }
     
 }
