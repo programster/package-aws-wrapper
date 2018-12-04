@@ -26,7 +26,7 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
      *                                This can be a string representing a single instance, or an
      *                                array list of instances.
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, $spot_instance_id = array())
+    public function __construct(\Programster\AwsWrapper\Enums\AwsRegion $region, $spot_instance_id = array())
     {
         $this->m_region = $region;
         
@@ -52,9 +52,9 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
     
     /**
      * Set a filter for this request for a "search" rather than fetching everything.
-     * @param \iRAP\AwsWrapper\Objects\AmazonFilter $filter
+     * @param \Programster\AwsWrapper\Objects\AmazonFilter $filter
      */
-    public function setFilter(\iRAP\AwsWrapper\Objects\AmazonFilter $filter)
+    public function setFilter(\Programster\AwsWrapper\Objects\AmazonFilter $filter)
     {
         $this->m_filter = $filter;
     }

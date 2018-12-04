@@ -24,7 +24,7 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
      *                           of subnet ID strings.
      * @return void
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, $subnetIds = null)
+    public function __construct(\Programster\AwsWrapper\Enums\AwsRegion $region, $subnetIds = null)
     {
         $this->m_region = $region;
         
@@ -53,9 +53,9 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
     /**
      * Optionally set the filter for the request. A filter does not need to be set and is
      * completely optional.
-     * @param \iRAP\AwsWrapper\Objects\AmazonFilter $filter - the filter you wish to apply.
+     * @param \Programster\AwsWrapper\Objects\AmazonFilter $filter - the filter you wish to apply.
      */
-    public function set_filter(\iRAP\AwsWrapper\Objects\AmazonFilter $filter)
+    public function set_filter(\Programster\AwsWrapper\Objects\AmazonFilter $filter)
     {
         $this->m_filter = $filter;
     }
@@ -71,7 +71,7 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
         $opt = array();
         
         if ($this->m_filter != null) {
-            /* @var $filter \iRAP\AwsWrapper\Objects\AmazonFilter */
+            /* @var $filter \Programster\AwsWrapper\Objects\AmazonFilter */
             $filter = $this->m_filter;
             $opt['Filter'] = $filter->to_array();
         }

@@ -33,7 +33,7 @@ class LaunchSpecification
      * @param Ec2InstanceType $instanceType - the type of instance (size) to launch
      * @param String $imageId - the ID of the image we are going to launch
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\Ec2InstanceType $instanceType, $imageId)
+    public function __construct(\Programster\AwsWrapper\Enums\Ec2InstanceType $instanceType, $imageId)
     {
         self::validateImageId($imageId);
         $this->m_instanceType = $instanceType;

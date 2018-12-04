@@ -13,7 +13,7 @@ class Ec2Client
     private $m_client;
     
     
-    public function __construct($apiKey, $apiSecret, \iRAP\AwsWrapper\Enums\AwsRegion $region)
+    public function __construct($apiKey, $apiSecret, \Programster\AwsWrapper\Enums\AwsRegion $region)
     {
         $credentials = array(
             'key'    => $apiKey,
@@ -34,7 +34,7 @@ class Ec2Client
      *
      * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#describeinstances
      */
-    public function describeInstances(\iRAP\AwsWrapper\Requests\RequestDescribeInstances $request)
+    public function describeInstances(\Programster\AwsWrapper\Requests\RequestDescribeInstances $request)
     {
         return $request->send($this->m_client);
     }
@@ -44,7 +44,7 @@ class Ec2Client
      * Launch some on demand instances (fixed price).
      * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#runinstances
      */
-    public function runInstances(\iRAP\AwsWrapper\Requests\RequestRunInstances $request)
+    public function runInstances(\Programster\AwsWrapper\Requests\RequestRunInstances $request)
     {
         return $request->send($this->m_client);
     }
@@ -62,10 +62,10 @@ class Ec2Client
     /**
      * Send a request to terminate instances.
      * http://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ec2-2015-04-15.html#terminateinstances
-     * @param \iRAP\AwsWrapper\Requests\RequestTerminateInstance $request
+     * @param \Programster\AwsWrapper\Requests\RequestTerminateInstance $request
      * @return \Aws\Result
      */
-    public function terminateInstances(\iRAP\AwsWrapper\Requests\RequestTerminateInstance $request)
+    public function terminateInstances(\Programster\AwsWrapper\Requests\RequestTerminateInstance $request)
     {
         return $request->send($this->m_client);
     }

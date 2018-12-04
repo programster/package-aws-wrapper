@@ -76,7 +76,7 @@ class Ec2Instance
         # It's odd, but the LaunchTime objects attributes are all lowercase unlike everything else.
         $ec2Instance->m_launch_time                 = strtotime((string)$item['LaunchTime']); # 2015-09-18 13:48:08
         
-        $ec2Instance->m_placement                   = \iRAP\AwsWrapper\Objects\Placement::createFromAwsApi($item['Placement']);
+        $ec2Instance->m_placement                   = \Programster\AwsWrapper\Objects\Placement::createFromAwsApi($item['Placement']);
         
         $ec2Instance->m_monitoring_state            = $item['Monitoring']['State']; # e.g. "disabled"
         

@@ -35,7 +35,7 @@ class RequestRunInstances extends Ec2RequestAbstract
      *                                                   refer to that object for details.
      */
     public function __construct(
-        \iRAP\AwsWrapper\Objects\LaunchSpecification $launchSpecification,
+        \Programster\AwsWrapper\Objects\LaunchSpecification $launchSpecification,
         $maxCount,
         $minCount
     ) {
@@ -133,7 +133,7 @@ class RequestRunInstances extends Ec2RequestAbstract
         $ec2InstanceStdObjs = $response->get('Instances');
         
         foreach ($ec2InstanceStdObjs as $ec2StdObj) {
-            $this->m_generatedInstances[] = \iRAP\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($ec2StdObj);
+            $this->m_generatedInstances[] = \Programster\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($ec2StdObj);
         }
         
         return $response;

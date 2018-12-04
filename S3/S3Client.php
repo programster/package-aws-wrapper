@@ -11,7 +11,7 @@ class S3Client
 {
     private $m_client;
     
-    public function __construct($apiKey, $apiSecret, \iRAP\AwsWrapper\Enums\AwsRegion $region)
+    public function __construct($apiKey, $apiSecret, \Programster\AwsWrapper\Enums\AwsRegion $region)
     {
         $credentials = array(
             'key'    => $apiKey,
@@ -264,7 +264,7 @@ class S3Client
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#createbucket
      * @return \Aws\Result
      */
-    public function createBucket($bucketName, \iRAP\AwsWrapper\S3\Acl $acl)
+    public function createBucket($bucketName, \Programster\AwsWrapper\S3\Acl $acl)
     {
         $params = array(
             'ACL'    => (string) $acl,
