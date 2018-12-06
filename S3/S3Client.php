@@ -240,8 +240,19 @@ class S3Client
      *                        The response might contain fewer keys but will never contain more.
      * @param string $delimiter - A delimiter is a character you use to group keys.
      */
-    public function listObjects($bucket, $prefix = "", $maxKeys = 1000, $delimiter = "")
+    public function listObjects(
+        string $bucket,
+        string $prefix = "",
+        int $maxKeys = 1000,
+        string $delimiter = ""
+    ) : \Programster\AwsWrapper\Responses\ResponseListObjects 
     {
+        // If the user provided a starting slash, this is a mistake and needs to be stripped.
+        // for some reason paths are not like linux absolute paths
+        if (\iRAP\CoreLibs\StringLib::startsWith($prefix, "/")) {
+            $prefix = substr($prefix, 1);
+        }
+        
         $params = array(
             'Bucket'        => $bucket, // REQUIRED
             'MaxKeys'       => $maxKeys,
@@ -255,7 +266,8 @@ class S3Client
             $params['Delimiter'] = $delimiter;
         }
         
-        return $this->m_client->listObjects($params);
+        $awsResponse = $this->m_client->listObjects($params);
+        return new \Programster\AwsWrapper\Responses\ResponseListObjects($awsResponse);
     }
     
     
@@ -292,5 +304,51 @@ class S3Client
         
         $manager = new \Aws\S3\Transfer($this->m_client, $source, $destination);
         $manager->transfer();
+    }
+    
+    
+    /**
+     * Delete the specified objects/files from the bucket
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#deleteobjects
+     * @param string $bucket
+     * @param array $names
+     */
+    public function deleteObjects(string $bucket, array $names)
+    {
+        $objectsArray = [];
+        
+        foreach ($names as $name) {
+            $objectsArray[] = array('Key' => $name);
+        }
+        
+        $params = array(
+            'Bucket' => $bucket,
+            'BypassGovernanceRetention' => true,
+            'Delete' => [
+                'Objects' => $objectsArray,
+                'Quiet' => true,
+            ]
+        );
+        
+        $response = $this->m_client->deleteObjects($params);
+        return $response;
+    }
+    
+    
+    /**
+     * Delete a "folder" within an S3 bucket. E.g. you want to delete all objects underneath /folder1
+     * @param string $bucketName - the name of the bucket to delete from
+     * @param string $path - the path to the folder within the bucket that you wish to delete.
+     */
+    public function deleteFolder(string $bucketName, string $path)
+    {
+        $numObjects = 1;
+        
+        while ($numObjects > 0) {
+            $objects = $this->listObjects($bucketName, $prefix);
+            
+            die("list objects response: " . print_r($objects, true));
+            $numObjects = count($objects);
+        }
     }
 }

@@ -26,6 +26,7 @@
             "Programster\\AwsWrapper\\Enums\\": "enums/",
             "Programster\\AwsWrapper\\Objects\\": "objects/",
             "Programster\\AwsWrapper\\Requests\\": "requests/",
+            "Programster\\AwsWrapper\\Responses\\": "responses/",
             "Programster\\AwsWrapper\\S3\\": "S3/",
             "Programster\\AwsWrapper\\Ec2\\": "Ec2/"
         }
