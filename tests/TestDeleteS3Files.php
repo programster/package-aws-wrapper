@@ -10,10 +10,10 @@ function main()
     
     // create some objects to delete
     $s3client->createFile(
-        TEST_BUCKET, 
-        "hello world", 
-        "folder1/hello-world2.txt", 
-        Programster\AwsWrapper\S3\Acl::createPrivate(), 
+        TEST_BUCKET,
+        "hello world",
+        "folder1/hello-world2.txt",
+        Programster\AwsWrapper\S3\Acl::createPrivate(),
         Programster\AwsWrapper\S3\StorageClass::createStandard()
     );
     
@@ -22,8 +22,7 @@ function main()
     
     $collection = [];
     
-    foreach ($objects as $object)
-    {
+    foreach ($objects as $object) {
         /* @var $object \Programster\AwsWrapper\Objects\S3Object */
         $collection[] = $object->getKey();
     }

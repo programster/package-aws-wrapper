@@ -134,9 +134,15 @@ class S3Client
      * @param string $remotePath - a path to stick the files in from inside the bucket. E.g.
      *                             '/subfolder1/subfolder2'. This MUST start with /
      */
-    public function uploadDirectory($localDirectoryPath, $bucketName, $remotePath = '/')
+    public function uploadDirectory($localDirectoryPath, $bucketName, $remotePath = '')
     {
-        $dest = 's3://' . $bucketName . $remotePath;
+        // If the user provided a starting slash, this is a mistake and needs to be stripped.
+        // for some reason paths are not like linux absolute paths
+        if (\iRAP\CoreLibs\StringLib::startsWith($remotePath, "/")) {
+            $remotePath = substr($remotePath, 1);
+        }
+        
+        $dest = 's3://' . $bucketName . "/" . $remotePath;
         $manager = new \Aws\S3\Transfer($this->m_client, $localDirectoryPath, $dest);
         $manager->transfer();
     }
@@ -342,13 +348,26 @@ class S3Client
      */
     public function deleteFolder(string $bucketName, string $path)
     {
-        $numObjects = 1;
+        if (\iRAP\CoreLibs\StringLib::startsWith($path, '/')) {
+            $path = substr($path, 1);
+        }
         
-        while ($numObjects > 0) {
-            $objects = $this->listObjects($bucketName, $prefix);
+        $isTruncated = true;
+        
+        while ($isTruncated) {
+            $listObjectsResponse = $this->listObjects($bucketName, $path);
+            $isTruncated = $listObjectsResponse->isTruncated();
+            $objects = $listObjectsResponse->getObjects();
+            $collection = [];
             
-            die("list objects response: " . print_r($objects, true));
-            $numObjects = count($objects);
+            if (count($objects) > 0) {
+                foreach ($objects as $object) {
+                    /* @var $object \Programster\AwsWrapper\Objects\S3Object */
+                    $collection[] = $object->getKey();
+                }
+                
+                $this->deleteObjects($bucketName, $collection);
+            }
         }
     }
 }
