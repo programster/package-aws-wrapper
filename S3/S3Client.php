@@ -131,10 +131,11 @@ class S3Client
      * Upload an entire directory to S3
      * @param string $localDirectoryPath - the path to the directory we wish to upload.
      * @param string $bucketName - the name of the bucket to store the files in.
+     * @param Acl $acl - the ACL you want for all the files. For example Acl::createPublicRead()
      * @param string $remotePath - a path to stick the files in from inside the bucket. E.g.
      *                             '/subfolder1/subfolder2'. This MUST start with /
      */
-    public function uploadDirectory($localDirectoryPath, $bucketName, $remotePath = '')
+    public function uploadDirectory($localDirectoryPath, $bucketName, Acl $acl, $remotePath = '')
     {
         // If the user provided a starting slash, this is a mistake and needs to be stripped.
         // for some reason paths are not like linux absolute paths
@@ -143,7 +144,16 @@ class S3Client
         }
         
         $dest = 's3://' . $bucketName . "/" . $remotePath;
-        $manager = new \Aws\S3\Transfer($this->m_client, $localDirectoryPath, $dest);
+        $aclString = (string)$acl;
+        
+        $beforeFunc = function (\Aws\CommandInterface $command) use ($aclString) {
+            if (in_array($command->getName(), ['PutObject', 'CreateMultipartUpload'])) {
+                $command['ACL'] = $aclString;
+            }
+        };
+        
+        $options = array('before' => $beforeFunc);
+        $manager = new \Aws\S3\Transfer($this->m_client, $localDirectoryPath, $dest, $options);
         $manager->transfer();
     }
     
