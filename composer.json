@@ -1,9 +1,9 @@
 {
     "name": "programster/aws-wrapper",
     "type": "library",
-    "description": "Package for rapidly developing models that represent mysql tables. Tables must have an id field.",
-    "keywords": ["mysql", "mysqli","models"],
-    "homepage": "https://github.com/iRAP-software/package-aws-wrapper",
+    "description": "A package to make it easier to interface with the AWS API.",
+    "keywords": ["AWS"],
+    "homepage": "https://github.com/programster/package-aws-wrapper",
     "license": "MIT",
     "authors": [
         {
