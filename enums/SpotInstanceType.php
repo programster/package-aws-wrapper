@@ -1,9 +1,9 @@
 <?php
 
-namespace iRAP\AwsWrapper\Enums;
+namespace Programster\AwsWrapper\Enums;
 
-/* 
- * This is a type specifier for when makeing a spot instance request. The two min types are 
+/*
+ * This is a type specifier for when makeing a spot instance request. The two min types are
  * one-time requests and "persistent"
  */
 

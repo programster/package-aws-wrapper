@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
-/* 
+/*
  * Class for representing Ebs volumes.
  * These are useful for feeding into the BlockDeviceMapping of a LaunchSpecification.
  * refer to:
@@ -30,23 +30,17 @@ class Ebs
     {
          $this->m_snapshot_id = $snapshot_id;
          
-         if (is_int($volume_size))
-         {
-             $this->m_volume_size = $volume_size;
-         }
-         else
-         {
-             throw new \Exception('volume size needs to be an integer');
-         }
+        if (is_int($volume_size)) {
+            $this->m_volume_size = $volume_size;
+        } else {
+            throw new \Exception('volume size needs to be an integer');
+        }
          
-         if (is_bool($delete_on_termination))
-         {
+        if (is_bool($delete_on_termination)) {
             $this->m_delete_on_termination = $delete_on_termination;
-         }
-         else
-         {
-             throw new \Exception('deleteOnTermination needs to be a boolean');
-         }
+        } else {
+            throw new \Exception('deleteOnTermination needs to be a boolean');
+        }
          
     }
                     

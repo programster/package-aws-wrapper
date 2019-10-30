@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
-/* 
+/*
  * An object to represent the Placement of an EC2 instance
  * http://docs.aws.amazon.com/AWSSDKforPHP/latest/#m=AmazonEC2/request_spot_instances
  */
@@ -17,7 +17,9 @@ class Placement
      * Private constructor to prevent outside creation. To generate a Placement object please use
      * one of the static create methods.
      */
-    private function __construct(){}
+    private function __construct()
+    {
+    }
     
     
     /**
@@ -52,10 +54,10 @@ class Placement
     
     /**
      * Creates and returns a Placement object with the groupname specified.
-     * 
-     * @param String $group_name - The name of the PlacementGroup in which an Amazon EC2 instance 
-     *                            runs. Placement groups are primarily used for launching High 
-     *                            Performance Computing instances in the same group to ensure fast 
+     *
+     * @param String $group_name - The name of the PlacementGroup in which an Amazon EC2 instance
+     *                            runs. Placement groups are primarily used for launching High
+     *                            Performance Computing instances in the same group to ensure fast
      *                            connection speeds.
      */
     public function createWithGroupName($group_name)
@@ -74,18 +76,15 @@ class Placement
     {
         $arrayForm = array();
         
-        if ($this->m_availability_zone != null)
-        {
+        if ($this->m_availability_zone != null) {
             $arrayForm['AvailabilityZone'] = $this->m_availability_zone;
         }
         
-        if ($this->m_group_name != null)
-        {
+        if ($this->m_group_name != null) {
             $arrayForm['GroupName'] = $this->m_group_name;
         }
         
-        if ($this->m_tenancy != null)
-        {
+        if ($this->m_tenancy != null) {
             $arrayForm['Tenancy'] = $this->m_tenancy;
         }
         

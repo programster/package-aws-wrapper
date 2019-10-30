@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
-/* 
+/*
  * Wrappar around the describe_subnets ec2 call.
  * Please refer to:
  * http://docs.aws.amazon.com/AWSSDKforPHP/latest/index.html#m=AmazonEC2/describe_subnets
@@ -15,7 +15,7 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
     private $m_subnet_ids = array();
     
     /**
-     * Create the request for describing spot instances. Dont forget to call the send() method 
+     * Create the request for describing spot instances. Dont forget to call the send() method
      * after having fully configured this object.
      * @param AmazonRegion $region - the region this request will be made to.
      * @param mixed $subnetIds - optionally specify the subnet ID(s) you wish to have described.
@@ -24,18 +24,14 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
      *                           of subnet ID strings.
      * @return void
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, $subnetIds = null)
+    public function __construct(\Programster\AwsWrapper\Enums\AwsRegion $region, $subnetIds = null)
     {
         $this->m_region = $region;
         
-        if ($subnetIds != null)
-        {
-            if (is_array($subnetIds))
-            {
+        if ($subnetIds != null) {
+            if (is_array($subnetIds)) {
                 $this->m_subnet_ids = $subnetIds;
-            }
-            else
-            {
+            } else {
                 # single subnet id specified.
                 $this->m_subnet_ids[] = $subnetIds;
             }
@@ -57,9 +53,9 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
     /**
      * Optionally set the filter for the request. A filter does not need to be set and is
      * completely optional.
-     * @param \iRAP\AwsWrapper\Objects\AmazonFilter $filter - the filter you wish to apply.
+     * @param \Programster\AwsWrapper\Objects\AmazonFilter $filter - the filter you wish to apply.
      */
-    public function set_filter(\iRAP\AwsWrapper\Objects\AmazonFilter $filter)
+    public function set_filter(\Programster\AwsWrapper\Objects\AmazonFilter $filter)
     {
         $this->m_filter = $filter;
     }
@@ -70,19 +66,17 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
      * @param void
      * @return Array $options - name/value pairs for the request.
      */
-    protected function getOptionsArray() 
-    {    
+    protected function getOptionsArray()
+    {
         $opt = array();
         
-        if ($this->m_filter != null)
-        {
-            /* @var $filter \iRAP\AwsWrapper\Objects\AmazonFilter */
+        if ($this->m_filter != null) {
+            /* @var $filter \Programster\AwsWrapper\Objects\AmazonFilter */
             $filter = $this->m_filter;
             $opt['Filter'] = $filter->to_array();
         }
         
-        if ($this->m_subnet_ids != null && count($this->m_subnet_ids) > 0)
-        {
+        if ($this->m_subnet_ids != null && count($this->m_subnet_ids) > 0) {
             $opt['SubnetId'] = $this->m_subnet_ids;
         }
         
@@ -96,7 +90,7 @@ class RequestDescribeSubnets extends Ec2RequestAbstract
      * @param array $opt
      * @return type
      */
-    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt)
     {
         $response = $ec2->describe_subnets($opt);
         print("subnets: " . PHP_EOL . print_r($response, true));

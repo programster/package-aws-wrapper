@@ -20,10 +20,10 @@ define('S3_BUCKET', 'my-bucket-name');
 define('AWS_KEY', 'someKeyValueHere');
 define('AWS_SECRET', 'someAwsSecretHere');
 
-$awsWrapper = new \iRAP\AwsWrapper\AwsWrapper(
+$awsWrapper = new \Programster\AwsWrapper\AwsWrapper(
     AWS_KEY,
     AWS_SECRET,
-    iRAP\AwsWrapper\Enums\AwsRegion::create_EU_W1()
+    Programster\AwsWrapper\Enums\AwsRegion::create_EU_W1()
 );
 
 # Get the S3 client for interfacing with S3, rather than EC2
@@ -35,8 +35,8 @@ $response = $s3Client->createFile(
     S3_BUCKET,
     "hello world",
     'test-file.txt',
-    iRAP\AwsWrapper\S3\Acl::createAuthenticatedRead(),
-    iRAP\AwsWrapper\S3\StorageClass::createStandard()
+    Programster\AwsWrapper\S3\Acl::createAuthenticatedRead(),
+    Programster\AwsWrapper\S3\StorageClass::createStandard()
 );
 
 ```

@@ -1,10 +1,10 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
-/* 
+/*
  * A filter for requests such as describe regions in order to reduce the nubmer of things that are
- * returned. 
+ * returned.
  */
 
 class AmazonFilter
@@ -39,8 +39,7 @@ class AmazonFilter
     {
         $arrayForm = array();
         
-        foreach ($this->m_parts as $name => $values)
-        {
+        foreach ($this->m_parts as $name => $values) {
             $arrayForm[] = array($name, $values);
         }
         

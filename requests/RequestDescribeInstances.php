@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -10,7 +10,7 @@ namespace iRAP\AwsWrapper\Requests;
 
 class RequestDescribeInstances extends Ec2RequestAbstract
 {
-    private $m_region; 
+    private $m_region;
     private $m_filters = null;
     private $m_instance_ids = array();
     private $m_instances = array(); # array for holding returned instances.
@@ -24,28 +24,25 @@ class RequestDescribeInstances extends Ec2RequestAbstract
      * @param Array $instance_ids - optionally specify an array of instance ids to describe
      * @return RequestDescribeInstances
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, array $instance_ids=array())
+    public function __construct(\Programster\AwsWrapper\Enums\AwsRegion $region, array $instance_ids = array())
     {
         $this->m_region = $region;
         
-        if (is_array($instance_ids))
-        {
+        if (is_array($instance_ids)) {
             $this->m_instance_ids = $instance_ids;
         }
     }
     
     
-    protected function getOptionsArray() 
+    protected function getOptionsArray()
     {
         $options = array();
         
-        if ($this->m_filters != null)
-        {
+        if ($this->m_filters != null) {
             $options['Filters'] = $this->m_filters->toArray();
         }
         
-        if (count($this->m_instance_ids) > 0)
-        {
+        if (count($this->m_instance_ids) > 0) {
             $options['InstanceIds'] = $this->m_instance_ids;
         }
         
@@ -54,27 +51,25 @@ class RequestDescribeInstances extends Ec2RequestAbstract
     
     
     /**
-     * Sends the request to AWS. Note that this function is not public. You need to call "send" 
+     * Sends the request to AWS. Note that this function is not public. You need to call "send"
      * instead which leads to this being called.
      * @param AmazonEC2 $ec2
      * @param array $opt - the optional parameters to be sent.
      * @return CFResponse $response
      */
-    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt)
     {
         $response = $ec2->describeInstances($opt);
         
         $reservations = $response->get('Reservations');
         
-        foreach ($reservations as $reservation)
-        {
+        foreach ($reservations as $reservation) {
             $instances = $reservation['Instances'];
             
-            foreach ($instances as $instanceSetItem)
-            {
-                $ec2Instance = \iRAP\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($instanceSetItem);
+            foreach ($instances as $instanceSetItem) {
+                $ec2Instance = \Programster\AwsWrapper\Ec2\Ec2Instance::createFromAwsItem($instanceSetItem);
                 $this->m_instances[] = $ec2Instance;
-                $this->m_returned_instance_ids[] = $ec2Instance->getInstanceId();     
+                $this->m_returned_instance_ids[] = $ec2Instance->getInstanceId();
             }
         }
         
@@ -95,10 +90,10 @@ class RequestDescribeInstances extends Ec2RequestAbstract
     
     /**
      * Set a filter for the instances we wish to retrieve.
-     * @param \iRAP\AwsWrapper\Objects\AmazonFilter $filter
+     * @param \Programster\AwsWrapper\Objects\AmazonFilter $filter
      * @return void.
      */
-    public function set_filter(\iRAP\AwsWrapper\Objects\AmazonFilter $filter)
+    public function set_filter(\Programster\AwsWrapper\Objects\AmazonFilter $filter)
     {
         $this->m_filters = $filter;
     }
@@ -106,18 +101,24 @@ class RequestDescribeInstances extends Ec2RequestAbstract
     
     /**
      * Returns the instances that were fetched with this request. Note that this will always be
-     * empty until send has been called at least once. Note that multiple calls to send will 
+     * empty until send has been called at least once. Note that multiple calls to send will
      * result in a "stacking" of results.
      * @param void
      * @return Array - array list of instances.
      */
-    public function get_instances() { return $this->m_instances; }
+    public function get_instances()
+    {
+        return $this->m_instances;
+    }
     
     
     /**
      * Fetch just the array list of instance ids that hare being described.
      * @return Array<String> - list of instance ids being described.
      */
-    public function getInstanceIds() { return $this->m_returned_instance_ids; }
+    public function getInstanceIds()
+    {
+        return $this->m_returned_instance_ids;
+    }
 }
 

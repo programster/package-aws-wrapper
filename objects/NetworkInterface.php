@@ -1,12 +1,12 @@
 <?php
 
-namespace iRAP\AwsWrapper\Objects;
+namespace Programster\AwsWrapper\Objects;
 
-/* 
+/*
  * A single network interface that can make up part of a networkInterface set in a
  * LaunchSpecification.
  * http://docs.aws.amazon.com/AWSSDKforPHP/latest/#m=AmazonEC2/request_spot_instances
- * 
+ *
  * http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-interface.html#cfn-awsec2networkinterface-privateipaddress
  */
 
@@ -31,7 +31,9 @@ class NetworkInterface
     /**
      * Utilize one of the public create methods to create one of these objects.
      */
-    private function __construct(){}
+    private function __construct()
+    {
+    }
     
     
     
@@ -45,25 +47,26 @@ class NetworkInterface
      * @param type $securityGroupId
      * @param bool $deleteOnTermination - flag indicating whether this interface should be destroyed
      *                                    when the ec2 instance is terminate.
-     * @param int $secondary_private_ip_address_count - The number of secondary private IP addresses 
-     *                                              that Amazon EC2 automatically assigns to the 
-     *                                              network interface. Amazon EC2 uses the value 
-     *                                              of the PrivateIpAddress property as the primary 
-     *                                              private IP address. If you don't specify that 
+     * @param int $secondary_private_ip_address_count - The number of secondary private IP addresses
+     *                                              that Amazon EC2 automatically assigns to the
+     *                                              network interface. Amazon EC2 uses the value
+     *                                              of the PrivateIpAddress property as the primary
+     *                                              private IP address. If you don't specify that
      *                                              property, Amazon EC2 automatically assigns both
      *                                              the primary and secondary private IP addresses.
      * param String $description - optionally set a description for the interface.
      */
-    public function createFromExisting($network_interface_id,
-                                       $assosciatePublicIp,
-                                       $deviceIndex,
-                                       $subnetId,
-                                       $privateIp,
-                                       $securityGroupId,
-                                       $deleteOnTermination,
-                                       $secondary_private_ip_address_count,
-                                       $description='')
-    {
+    public function createFromExisting(
+        $network_interface_id,
+        $assosciatePublicIp,
+        $deviceIndex,
+        $subnetId,
+        $privateIp,
+        $securityGroupId,
+        $deleteOnTermination,
+        $secondary_private_ip_address_count,
+        $description = ''
+    ) {
         self::validate_secondary_ip_addresss_count($secondary_private_ip_address_count);
         self::validate_ip_addresses($privateIp, $secondary_private_ip_address_count);
         
@@ -82,7 +85,7 @@ class NetworkInterface
     /**
      * Create a new NIC from scratch. This will let AWS create an ID etc.
      * @param bool $assosciatePublicIp - whether to assosciate a public ip with the NIC.
-     * @param bool $deleteOnTermination - whether to delete this NIC when the EC2 instance is 
+     * @param bool $deleteOnTermination - whether to delete this NIC when the EC2 instance is
      *                                    terminated.
      * @return NetworkInterface
      */
@@ -103,10 +106,8 @@ class NetworkInterface
      */
     public function addPrivateIp($ip, $isPrimary)
     {
-        if ($isPrimary)
-        {
-            if ($this->m_hasSpecifiedPrimaryIp)
-            {
+        if ($isPrimary) {
+            if ($this->m_hasSpecifiedPrimaryIp) {
                 throw new Exception("You cannot specify two primary IPs on a network interface!");
             }
             
@@ -128,49 +129,38 @@ class NetworkInterface
     {
         $arrayForm = array();
         
-        if (isset($this->m_assosciatePublicIpAddress))
-        {
+        if (isset($this->m_assosciatePublicIpAddress)) {
             $arrayForm['AssociatePublicIpAddress'] = $this->m_assosciatePublicIpAddress;
         }
         
-        if (isset($this->m_deleteOnTermination))
-        {
+        if (isset($this->m_deleteOnTermination)) {
             $arrayForm['DeleteOnTermination'] = $this->m_deleteOnTermination;
         }
         
-        if (isset($this->m_description))
-        {
+        if (isset($this->m_description)) {
             $arrayForm['Description'] = $this->m_description;
         }
         
-        if (isset($this->m_deviceIndex))
-        {
+        if (isset($this->m_deviceIndex)) {
             $arrayForm['DeviceIndex'] = $this->m_deviceIndex;
         }
         
-        if (isset($this->m_groups))
-        {
+        if (isset($this->m_groups)) {
             $arrayForm['Groups'] = $this->m_groups;
         }
         
-        if (isset($this->m_networkInterfaceId))
-        {
+        if (isset($this->m_networkInterfaceId)) {
             $arrayForm['NetworkInterfaceId'] = $this->m_networkInterfaceId;
         }
         
-        if (count($this->m_privateIpAddresses) > 0)
-        {
-            if (count($this->m_privateIpAddresses) == 1)
-            {
+        if (count($this->m_privateIpAddresses) > 0) {
+            if (count($this->m_privateIpAddresses) == 1) {
                 $privateIp = array_shift($this->m_privateIpAddresses);
                 $arrayForm['PrivateIpAddress'] = $privateIp->ip;
-            }
-            else
-            {
+            } else {
                 $privateIpAddresses = array();
                 
-                foreach ($this->m_privateIpAddresses as $privateIp)
-                {
+                foreach ($this->m_privateIpAddresses as $privateIp) {
                     $privateIpAddresses[] = array(
                         'Primary'          => $privateIp->isPrimary,
                         'PrivateIpAddress' => $privateIp->ip
@@ -181,13 +171,11 @@ class NetworkInterface
             }
         }
         
-        if (isset($this->m_secondaryPrivateIpAddressCount))
-        {
+        if (isset($this->m_secondaryPrivateIpAddressCount)) {
             $arrayForm['SecondaryPrivateIpAddressCount'] = $this->m_secondaryPrivateIpAddressCount;
         }
         
-        if (isset($this->m_subnetId))
-        {
+        if (isset($this->m_subnetId)) {
             $arrayForm['SubnetId'] = $this->m_subnetId;
         }
         
@@ -199,44 +187,36 @@ class NetworkInterface
      * Validates the ip addresses passed to this object. This ensures that they are of the correct
      * type (PrivateIp) and that there are not two primaries.
      * @param array $ipAddresses
-     * @param int $secondaryPrivateIpAddressCount - 
+     * @param int $secondaryPrivateIpAddressCount -
      * @throws Exception
      */
-    private static function validate_ip_addresses(Array $ipAddresses, $secondaryPrivateIpAddressCount)
+    private static function validate_ip_addresses(array $ipAddresses, $secondaryPrivateIpAddressCount)
     {
-        if (count($ipAddresses) == 0 && $secondaryPrivateIpAddressCount == 0)
-        {
+        if (count($ipAddresses) == 0 && $secondaryPrivateIpAddressCount == 0) {
             throw new \Exception('You need to provide a private ip, or set ' .
                                 '$secondaryPrivateIpAddressCount to be larger than 0');
         }
         
         $have_primary = false;
         
-        foreach ($ipAddresses as $ip)
-        {
-            if (!($ip instanceof PrivateIp))
-            {
+        foreach ($ipAddresses as $ip) {
+            if (!($ip instanceof PrivateIp)) {
                 throw new \Exception('Network interface ips need to be instances of PrivateIp');
             }
             
-            if ($ip->is_primary())
-            {
-                if ($have_primary)
-                {
+            if ($ip->is_primary()) {
+                if ($have_primary) {
                     throw new \Exception('Cannot have two primary private ip addresses');
-                }
-                else
-                {
+                } else {
                     $have_primary = true;
                 }
             }
         }
         
-        # If primary Ip is not set on private, one of amazons allocated ips from 
-        # $secondaryPrivateIpAddressCount will be made primary, so check if this is 0 when no 
+        # If primary Ip is not set on private, one of amazons allocated ips from
+        # $secondaryPrivateIpAddressCount will be made primary, so check if this is 0 when no
         # primary set.
-        if (!$have_primary && $secondaryPrivateIpAddressCount == 0)
-        {
+        if (!$have_primary && $secondaryPrivateIpAddressCount == 0) {
             throw new \Exception('Need a primary IP!');
         }
     }
@@ -244,19 +224,17 @@ class NetworkInterface
     
     /**
      * Validates that a user provided secondaryIpAddress count is acceptable.
-     * @param int $secondaryPrivateIpAddressCount - the user specified 
+     * @param int $secondaryPrivateIpAddressCount - the user specified
      *            secondaryPrivateIpAddressCount.
      * @throws Exception
      */
     private static function validate_secondary_ip_addresss_count($secondaryPrivateIpAddressCount)
     {
-        if (!is_int($secondaryPrivateIpAddressCount))
-        {
+        if (!is_int($secondaryPrivateIpAddressCount)) {
             throw new \Exception('secondaryPrivateIpAddressCount needs to be an integer');
         }
         
-        if ($secondaryPrivateIpAddressCount < 0)
-        {
+        if ($secondaryPrivateIpAddressCount < 0) {
             throw new \Exception('secondaryPrivateIpAddressCount cannot be less than 0');
         }
     }

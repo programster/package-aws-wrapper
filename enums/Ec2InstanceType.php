@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Enums;
+namespace Programster\AwsWrapper\Enums;
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -58,8 +58,7 @@ class Ec2InstanceType
      */
     public static function createGeneralPurposeNew($size)
     {
-        switch ($size)
-        {        
+        switch ($size) {
             case 1:
             {
                 $ec2InstanceType = new Ec2InstanceType('m3.xlarge');
@@ -96,8 +95,7 @@ class Ec2InstanceType
      */
     public static function createGeneralPurposeOld($size)
     {
-        switch ($size)
-        {
+        switch ($size) {
             case 1:
             {
                 $ec2InstanceType = new Ec2InstanceType('m1.small');
@@ -143,13 +141,12 @@ class Ec2InstanceType
      *                  2 - 34.2 Gig
      *                  3 - 68.4 Gig
      *                  4 - 244 Gig
-     * 
+     *
      * @throws Exception if size was not a valid number.
      */
     public static function createHighMemory($size)
     {
-        switch ($size)
-        {        
+        switch ($size) {
             case 1:
             {
                 $ec2InstanceType = new Ec2InstanceType('m2.xlarge');
@@ -195,8 +192,7 @@ class Ec2InstanceType
      */
     public static function createNewHighCpu($size)
     {
-        switch ($size)
-        {
+        switch ($size) {
             case 1:
             {
                 $ec2InstanceType = new Ec2InstanceType('c4.large');
@@ -248,8 +244,7 @@ class Ec2InstanceType
      */
     public static function createOldHighCpu($size)
     {
-        switch ($size)
-        {
+        switch ($size) {
             case 1:
             {
                 $ec2InstanceType = new Ec2InstanceType('c3.large');
@@ -299,8 +294,7 @@ class Ec2InstanceType
      */
     public static function createHighIo($size)
     {
-        switch ($size)
-        {
+        switch ($size) {
             case 1:
             {
                 $ec2InstanceType = new Ec2InstanceType('i2.xlarge');
@@ -408,8 +402,7 @@ class Ec2InstanceType
             'c4.8xlarge'
         );
         
-        if (!in_array($size, $allowedTypes))
-        {
+        if (!in_array($size, $allowedTypes)) {
             throw new \Exception('Invalid instance size: [' . $size . ']');
         }
         
@@ -424,11 +417,11 @@ class Ec2InstanceType
     
     
     /**
-     * Define the toString method so we can place this object directly in calls without using a 
+     * Define the toString method so we can place this object directly in calls without using a
      * method.
      * @return String - the instanceType.
      */
-    public function __toString() 
+    public function __toString()
     {
         return $this->m_instanceType;
     }

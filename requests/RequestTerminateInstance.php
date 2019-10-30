@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
-/* 
+/*
  * A request to terminate a single or multiple instances.
  */
 
@@ -17,15 +17,11 @@ class RequestTerminateInstance extends Ec2RequestAbstract
      * @param mixed $instance_ids - a single instance id or an array of instance ids
      */
     public function __construct($instance_ids)
-    {        
-        if (is_array($instance_ids))
-        {
+    {
+        if (is_array($instance_ids)) {
             $this->m_instance_ids = $instance_ids;
-        }
-        else
-        {
-            if (!is_string($instance_ids) || $instance_ids == '')
-            {
+        } else {
+            if (!is_string($instance_ids) || $instance_ids == '') {
                 $errMsg = 'TerminateInstanceRequest: instance_ids needs to be an array of ' .
                           'instance ids or a string representing a single instance id.';
                 throw new \Exception($errMsg);

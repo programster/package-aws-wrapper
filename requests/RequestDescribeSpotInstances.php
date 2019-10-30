@@ -1,8 +1,8 @@
 <?php
 
-namespace iRAP\AwsWrapper\Requests;
+namespace Programster\AwsWrapper\Requests;
 
-/* 
+/*
  * The request to retrieve information about spot instances.
  * http://docs.aws.amazon.com/AWSSDKforPHP/latest/index.html#m=AmazonEC2/describe_regions
  */
@@ -20,22 +20,19 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
     
     
     /**
-     * 
+     *
      * @param AmazonRegion $region - the region that this applies to.
-     * @param mixed $spot_instance_id - optionally specify the spot instances you wish to describe. 
+     * @param mixed $spot_instance_id - optionally specify the spot instances you wish to describe.
      *                                This can be a string representing a single instance, or an
      *                                array list of instances.
      */
-    public function __construct(\iRAP\AwsWrapper\Enums\AwsRegion $region, $spot_instance_id=array())
+    public function __construct(\Programster\AwsWrapper\Enums\AwsRegion $region, $spot_instance_id = array())
     {
         $this->m_region = $region;
         
-        if (is_array($spot_instance_id))
-        {
+        if (is_array($spot_instance_id)) {
             $this->m_spot_instance_request_ids = $spot_instance_id;
-        }
-        else
-        {
+        } else {
             $this->m_spot_instance_request_ids[] = $spot_instance_id;
         }
     }
@@ -55,9 +52,9 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
     
     /**
      * Set a filter for this request for a "search" rather than fetching everything.
-     * @param \iRAP\AwsWrapper\Objects\AmazonFilter $filter
+     * @param \Programster\AwsWrapper\Objects\AmazonFilter $filter
      */
-    public function setFilter(\iRAP\AwsWrapper\Objects\AmazonFilter $filter)
+    public function setFilter(\Programster\AwsWrapper\Objects\AmazonFilter $filter)
     {
         $this->m_filter = $filter;
     }
@@ -68,17 +65,15 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
      * http://docs.aws.amazon.com/AWSSDKforPHP/latest/index.html#m=AmazonEC2/describe_regions
      * @return Array $options
      */
-    protected function getOptionsArray() 
+    protected function getOptionsArray()
     {
         $options = array();
         
-        if (count($this->m_spot_instance_request_ids) > 0)
-        {
+        if (count($this->m_spot_instance_request_ids) > 0) {
             $options['SpotInstanceRequestId'] = $this->m_spot_instance_request_ids;
         }
         
-        if ($this->m_filter != null)
-        {
+        if ($this->m_filter != null) {
             $options['Filter'] = $this->m_filter->toArray();
         }
         
@@ -92,16 +87,15 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
      * @param array $opt - the options parameter for the request.
      * @return CFResponse
      */
-    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt) 
+    protected function sendRequest(\Aws\Ec2\Ec2Client $ec2, array $opt)
     {
         $response = $ec2->describe_spot_instance_requests($opt);
         
 
-        $items = $response->body->item;        
+        $items = $response->body->item;
         $items = $response->body->spotInstanceRequestSet->item;
 
-        foreach ($items as $item)
-        {
+        foreach ($items as $item) {
             $spotInstance = SpotInstance::create_from_aws_item($item);
             $this->m_spot_instances[] = $spotInstance;
             $this->m_spotInstanceIds[] = $spotInstance->getSpotInstanceId();
@@ -114,6 +108,12 @@ class RequestDescribeSpotInstances extends Ec2RequestAbstract
     }
     
     
-    public function getInstanceIds() { return $this->m_spotInstanceIds; }
-    public function get_spot_instances() { return $this->m_spot_instances; }
+    public function getInstanceIds()
+    {
+        return $this->m_spotInstanceIds;
+    }
+    public function get_spot_instances()
+    {
+        return $this->m_spot_instances;
+    }
 }
