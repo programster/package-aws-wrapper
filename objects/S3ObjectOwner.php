@@ -10,22 +10,24 @@ class S3ObjectOwner
 {
     private $m_id;
     private $m_displayName;
-    
-    
+
+
     public function __construct($data)
     {
         $this->m_id = $data['ID'];
-        $this->m_displayName = $data['DisplayName'];
+
+        if (isset($data['DisplayName']))
+        {
+            $this->m_displayName = $data['DisplayName'];
+        }
+        else
+        {
+            $this->m_displayName = "";
+        }
     }
-    
-    
+
+
     # Accessors
-    public function getId() : string
-    {
-        return $this->m_id;
-    }
-    public function getDisplayname() : string
-    {
-        return $this->m_displayName;
-    }
+    public function getId() : string { return $this->m_id; }
+    public function getDisplayname() : string { return $this->m_displayName; }
 }
