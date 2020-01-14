@@ -380,4 +380,22 @@ class S3Client
             }
         }
     }
+
+
+    /**
+     * Loops through the objects in a bucket, executing your callback on each one. 
+     * Use this instead of listObjects if you need to not worry about maxKeys being 1000.
+     * @param string $bucket - the name of the bucket that contains your objects.
+     * @param string $prefix - Limits the response to keys that begin with the specified prefix.
+     * @param \Programster\AwsWrapper\S3\S3WalkerInterface $callback - a handler of the objects.
+     */
+    public function listObjectsWalk(string $bucket, string $prefix = "", S3WalkerInterface $callback) : void
+    {
+        $iterator = $this->m_client->getIterator('ListObjects', array('Bucket' => $bucket, 'Prefix' => $prefix));
+
+        foreach ($iterator as $object) 
+        {
+            $callback->handle(new \Programster\AwsWrapper\Objects\S3Object($object));
+        }
+    }
 }
