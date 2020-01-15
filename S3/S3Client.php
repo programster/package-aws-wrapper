@@ -324,15 +324,17 @@ class S3Client
         $manager = new \Aws\S3\Transfer($this->m_client, $source, $destination);
         $manager->transfer();
     }
-    
-    
+
+
     /**
      * Delete the specified objects/files from the bucket
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-s3-2006-03-01.html#deleteobjects
      * @param string $bucket
      * @param array $names
+     * @param array $extraParams - any extra parameters you may need to specify. E.g. ['BypassGovernanceRetention' => true]
+     * @return the response from calling deleteObjects on the underlying raw s3 client that we wrap.
      */
-    public function deleteObjects(string $bucket, array $names)
+    public function deleteObjects(string $bucket, array $names, array $extraParams = array())
     {
         $objectsArray = [];
         
@@ -342,12 +344,16 @@ class S3Client
         
         $params = array(
             'Bucket' => $bucket,
-            'BypassGovernanceRetention' => true,
             'Delete' => [
                 'Objects' => $objectsArray,
                 'Quiet' => true,
             ]
         );
+        
+        if (count($extraParams) > 0)
+        {
+            $params = array_merge($params, $extraParams);
+        }
         
         $response = $this->m_client->deleteObjects($params);
         return $response;
