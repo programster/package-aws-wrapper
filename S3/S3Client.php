@@ -7,6 +7,9 @@
 
 namespace Programster\AwsWrapper\S3;
 
+use function Safe\file_put_contents;
+
+
 class S3Client
 {
     private $m_client;
@@ -50,7 +53,8 @@ class S3Client
         StorageClass $storageClass,
         $mimeType,
         $metadata = array()
-    ) {
+    )
+    {
         # Strip off the beginning / if they have provided one. Otherwise you end up with a folder
         # with no name at the top of your bucket.
         if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/')) {
@@ -68,7 +72,6 @@ class S3Client
         );
         
         $result = $this->m_client->putObject($params);
-        
         return $result;
     }
     

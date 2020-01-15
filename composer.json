@@ -18,7 +18,8 @@
         "irap/core-libs": "1.1.*",
         "aws/aws-sdk-php" : "3.99.*",
         "ext-libxml" : "*",
-        "ext-simplexml" : "*"
+        "ext-simplexml" : "*",
+        "thecodingmachine/safe": "^1.0"
     },
     "autoload": {
         "psr-4": {
