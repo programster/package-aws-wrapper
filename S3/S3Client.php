@@ -389,7 +389,7 @@ class S3Client
      * @param string $prefix - Limits the response to keys that begin with the specified prefix.
      * @param \Programster\AwsWrapper\S3\S3WalkerInterface $callback - a handler of the objects.
      */
-    public function listObjectsWalk(string $bucket, string $prefix = "", S3WalkerInterface $callback) : void
+    public function listObjectsWalk(S3WalkerInterface $callback, string $bucket, string $prefix = "") : void
     {
         $iterator = $this->m_client->getIterator('ListObjects', array('Bucket' => $bucket, 'Prefix' => $prefix));
 
