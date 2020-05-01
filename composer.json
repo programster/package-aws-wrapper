@@ -16,7 +16,7 @@
     "require": {
         "php": ">=7.2.0",
         "irap/core-libs": "1.1.*",
-        "aws/aws-sdk-php" : "3.99.*",
+        "aws/aws-sdk-php" : "3.137.*",
         "ext-libxml" : "*",
         "ext-simplexml" : "*",
         "thecodingmachine/safe": "^1.0"
