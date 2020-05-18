@@ -19,7 +19,8 @@
         "aws/aws-sdk-php" : "3.137.*",
         "ext-libxml" : "*",
         "ext-simplexml" : "*",
-        "thecodingmachine/safe": "^1.0"
+        "thecodingmachine/safe": "^1.0",
+        "ramsey/uuid": "^4.0"
     },
     "autoload": {
         "psr-4": {
