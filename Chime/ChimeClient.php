@@ -29,10 +29,22 @@ class ChimeClient
     
     
     /**
+     * Create an attendee
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#createattendee
+     * 
+     * @param string $meetingId - the ID of the meeting the attendee will be attending.
+     * @param string $externalUserId - optionally provide an ID of your user. It not provided, a UUID for the attendee
+     *                                 will be generated for you.
+     * @param Tag $tags
+     * @return \Programster\AwsWrapper\Chime\ResponseCreateAttendee
      */
-    public function createAttendee(string $externalUserId, string $meetingId, Tag ...$tags)
+    public function createAttendee(string $meetingId, string $externalUserId = null, Tag ...$tags) : ResponseCreateAttendee
     {
+        if ($externalUserId === null)
+        {
+            $externalUserId = \Ramsey\Uuid\Uuid::uuid4();
+        }
+        
         $params = array(
             'ExternalUserId' => $externalUserId, // REQUIRED
             'MeetingId' => $meetingId, // REQUIRED
@@ -43,7 +55,9 @@ class ChimeClient
             $params['Tags'] = $tags;
         }
         
-        $response = $this->m_client->createAttendee($params);
+        $awsResponse = $this->m_client->createAttendee($params);
+        $response = new ResponseCreateAttendee($awsResponse);
+        return $response;
     }
     
     
@@ -77,7 +91,7 @@ class ChimeClient
         ?string $meetingHostId = null, 
         ?NotificationsConfiguration $notificationsConfiguration = null, 
         Tag ...$tags
-    )
+    ) : ResponseCreateMeeting
     {
         if ($clientRequestToken === null)
         {
@@ -113,9 +127,8 @@ class ChimeClient
             $params['NotificationsConfiguration'] = $notificationsConfiguration;
         }
         
-        $response = $this->m_client->createMeeting($params);
-        
-        return $response;
+        $awsResponse = $this->m_client->createMeeting($params);
+        return new ResponseCreateMeeting($awsResponse);
     }
     
     
