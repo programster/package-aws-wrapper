@@ -29,10 +29,22 @@ class ChimeClient
     
     
     /**
+     * Create an attendee
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#createattendee
+     * 
+     * @param string $meetingId - the ID of the meeting the attendee will be attending.
+     * @param string $externalUserId - optionally provide an ID of your user. It not provided, a UUID for the attendee
+     *                                 will be generated for you.
+     * @param Tag $tags
+     * @return \Programster\AwsWrapper\Chime\ResponseCreateAttendee
      */
-    public function createAttendee(string $externalUserId, string $meetingId, Tag ...$tags)
+    public function createAttendee(string $meetingId, string $externalUserId = null, Tag ...$tags) : ResponseCreateAttendee
     {
+        if ($externalUserId === null)
+        {
+            $externalUserId = \Ramsey\Uuid\Uuid::uuid4();
+        }
+        
         $params = array(
             'ExternalUserId' => $externalUserId, // REQUIRED
             'MeetingId' => $meetingId, // REQUIRED
@@ -43,7 +55,9 @@ class ChimeClient
             $params['Tags'] = $tags;
         }
         
-        $response = $this->m_client->createAttendee($params);
+        $awsResponse = $this->m_client->createAttendee($params);
+        $response = new ResponseCreateAttendee($awsResponse);
+        return $response;
     }
     
     
@@ -77,7 +91,7 @@ class ChimeClient
         ?string $meetingHostId = null, 
         ?NotificationsConfiguration $notificationsConfiguration = null, 
         Tag ...$tags
-    )
+    ) : ResponseCreateMeeting
     {
         if ($clientRequestToken === null)
         {
@@ -113,54 +127,91 @@ class ChimeClient
             $params['NotificationsConfiguration'] = $notificationsConfiguration;
         }
         
-        $response = $this->m_client->createMeeting($params);
+        $awsResponse = $this->m_client->createMeeting($params);
+        return new ResponseCreateMeeting($awsResponse);
+    }
+    
+    
+    /**
+     * Lists the attendees for the specified Amazon Chime SDK meeting. 
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#listattendees
+     * @param type $meetingId
+     * @param int|null $maxResults
+     * @param string|null $nextToken
+     * @return type
+     */
+    public function listAttendees($meetingId, ?int $maxResults=null, ?string $nextToken = null)
+    {
+        $parameters = array(
+            'MeetingId' => $meetingId
+        );
         
+        if ($maxResults !== null)
+        {
+            $parameters['MaxResults'] = $maxResults;
+        }
+        
+        if ($nextToken !== null)
+        {
+            $parameters['NextToken'] = $nextToken;
+        }
+        
+        $response = $this->m_client->listAttendees($parameters);
         return $response;
     }
     
     
     /**
-     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#listattendees
+     * Lists up to 100 active Amazon Chime SDK meetings. 
+     * For more information about the Amazon Chime SDK, see Using the Amazon Chime SDK in the Amazon Chime Developer Guide.
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#listmeetings
+     * @param int|null $maxResults
+     * @param string|null $nextToken
+     * @return type
      */
-    public function listAttendees($meetingID, ?int $maxREsults=null)
-    {
-        
-    }
-    
-    
-    # https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#listmeetings
-    public function listMeetings(?int $maxResults = null)
+    public function listMeetings(?int $maxResults = null, ?string $nextToken = null)
     {
         $parameters = array();
         
-        if ($maxRexults !== null)
+        if ($maxResults !== null)
         {
-            $parameters['MaxResults'] = $maxRexults;
+            $parameters['MaxResults'] = $maxResults;
+        }
+        
+        if ($nextToken !== null)
+        {
+            $parameters['NextToken'] = $nextToken;
         }
         
         $response = $this->m_client->listMeetings($parameters);
-        
-        # process response here.
+        return $response;
     }
     
     
     /**
+     * Get information about a specific meeting.
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#getmeeting
-     */ 
-    public function getMeeting()
+     * @param string $meetingId
+     * @return type
+     */
+    public function getMeeting(string $meetingId) : ResponseGetMeeting
     {
-        
+        $awsResponse = $this->m_client->getMeeting(['MeetingId' => $meetingId]);
+        return new ResponseGetMeeting($awsResponse);
     }
     
     
     /**
+     * Delete a specific meeting.
+     * When a meeting is deleted, its attendees are also deleted and clients can no longer join it.
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-chime-2018-05-01.html#deletemeeting
+     * @param string $meetingId
+     * @return type
      */
     public function deleteMeeting(string $meetingId)
     {
         $params = ['MeetingId' => $meetingId];
         $response = $this->m_client->deleteMeeting($params);
-        
-        // parse the response here...
+        return $response;
     }
 }
