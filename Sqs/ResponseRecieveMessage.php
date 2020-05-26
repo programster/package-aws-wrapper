@@ -21,7 +21,7 @@ class ResponseRecieveMessage
 
         if ($metadata['statusCode'] === 200)
         {
-            if (isset($arrayForm['Messages']) && count($messages) > 0)
+            if (isset($arrayForm['Messages']) && count($arrayForm['Messages']) > 0)
             {
                 $messages = $arrayForm['Messages'];
 
