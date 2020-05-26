@@ -102,7 +102,7 @@ class SqsClient
      * (fewer than 1,000), you most likely get fewer messages than you requested per ReceiveMessage call.
      * If the number of messages in the queue is extremely small, you might not receive any messages in a particular
      * ReceiveMessage response. If this happens, repeat the request.
-     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#listqueues
+     * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-sqs-2012-11-05.html#receivemessage
      *
      * @param string $queueUrl
      * @param int $visibilityTimeout
@@ -117,7 +117,7 @@ class SqsClient
         int $maxNumMessages = 1,
         int $waitTimeSeconds = 0,
         string $receiveRequestAttemptId = ""
-    )
+    ) : ResponseRecieveMessage
     {
         if ($maxNumMessages > 10) { $maxNumMessages = 10; }
         if ($maxNumMessages < 1) { $maxNumMessages = 1; }
@@ -135,7 +135,8 @@ class SqsClient
             $params['ReceiveRequestAttemptId'] = $receiveRequestAttemptId;
         }
 
-        return $this->m_client->receiveMessage($params);
+        $awsResponse = $this->m_client->receiveMessage($params);
+        return new ResponseRecieveMessage($awsResponse);
     }
 
 
