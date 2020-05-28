@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "irap/core-libs": "1.1.*",
+        "programster/core-libs": "1.7.*",
         "aws/aws-sdk-php" : "3.137.*",
         "ext-libxml" : "*",
         "ext-simplexml" : "*",
@@ -30,6 +30,8 @@
             "Programster\\AwsWrapper\\Requests\\": "requests/",
             "Programster\\AwsWrapper\\Responses\\": "responses/",
             "Programster\\AwsWrapper\\S3\\": "S3/",
+            "Programster\\AwsWrapper\\Chime\\": "Chime/",
+            "Programster\\AwsWrapper\\Workspaces\\": "Workspaces/",
             "Programster\\AwsWrapper\\Ec2\\": "Ec2/"
         }
     }

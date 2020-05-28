@@ -58,7 +58,8 @@ class S3Client
     {
         # Strip off the beginning / if they have provided one. Otherwise you end up with a folder
         # with no name at the top of your bucket.
-        if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/')) {
+        if (\Programster\CoreLibs\StringLib::startsWith($remoteFilepath, '/'))
+        {
             $remoteFilepath = substr($remoteFilepath, 1);
         }
 
@@ -108,7 +109,7 @@ class S3Client
     ) {
         # Strip off the beginning / if they have provided one. Otherwise you end up with a folder
         # with no name at the top of your bucket.
-        if (\iRAP\CoreLibs\StringLib::startsWith($remoteFilepath, '/')) {
+        if (\Programster\CoreLibs\StringLib::startsWith($remoteFilepath, '/')) {
             $remoteFilepath = substr($remoteFilepath, 1);
         }
 
@@ -147,7 +148,8 @@ class S3Client
     {
         // If the user provided a starting slash, this is a mistake and needs to be stripped.
         // for some reason paths are not like linux absolute paths
-        if (\iRAP\CoreLibs\StringLib::startsWith($remotePath, "/")) {
+        if (\Programster\CoreLibs\StringLib::startsWith($remotePath, "/"))
+        {
             $remotePath = substr($remotePath, 1);
         }
 
@@ -155,7 +157,8 @@ class S3Client
         $aclString = (string)$acl;
 
         $beforeFunc = function (\Aws\CommandInterface $command) use ($aclString) {
-            if (in_array($command->getName(), ['PutObject', 'CreateMultipartUpload'])) {
+            if (in_array($command->getName(), ['PutObject', 'CreateMultipartUpload']))
+            {
                 $command['ACL'] = $aclString;
             }
         };
@@ -273,7 +276,8 @@ class S3Client
     {
         // If the user provided a starting slash, this is a mistake and needs to be stripped.
         // for some reason paths are not like linux absolute paths
-        if (\iRAP\CoreLibs\StringLib::startsWith($prefix, "/")) {
+        if (\Programster\CoreLibs\StringLib::startsWith($prefix, "/"))
+        {
             $prefix = substr($prefix, 1);
         }
 
@@ -372,20 +376,24 @@ class S3Client
      */
     public function deleteFolder(string $bucketName, string $path)
     {
-        if (\iRAP\CoreLibs\StringLib::startsWith($path, '/')) {
+        if (\Programster\CoreLibs\StringLib::startsWith($path, '/'))
+        {
             $path = substr($path, 1);
         }
 
         $isTruncated = true;
 
-        while ($isTruncated) {
+        while ($isTruncated)
+        {
             $listObjectsResponse = $this->listObjects($bucketName, $path);
             $isTruncated = $listObjectsResponse->isTruncated();
             $objects = $listObjectsResponse->getObjects();
             $collection = [];
 
-            if (count($objects) > 0) {
-                foreach ($objects as $object) {
+            if (count($objects) > 0)
+            {
+                foreach ($objects as $object)
+                {
                     /* @var $object \Programster\AwsWrapper\Objects\S3Object */
                     $collection[] = $object->getKey();
                 }
