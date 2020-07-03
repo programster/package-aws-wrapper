@@ -20,15 +20,21 @@ class WorkspaceConfig implements JsonSerializable
 
 
     /**
-     *
+     * Create a workspace configuration which can be used for creating one or more workspaces.
      * @param string $bundleId - The identifier of the bundle. A WorkSpace bundle is a combination of an
      *                           operating system, and storage, compute, and software resources. When you launch a
-     *                          WorkSpace, you select the bundle that meets your needs. The default bundles available
-     *                          for WorkSpaces are called public bundles.
+     *                           WorkSpace, you select the bundle that meets your needs. The default bundles available
+     *                           for WorkSpaces are called public bundles.
+     *
      * @param string $directoryId - The identifier of the AWS Directory Service directory for the WorkSpace.
+     *
      * @param \Programster\AwsWrapper\Workspaces\VolumeEncryptionConfig $volumeEncryptionConfig
-     * @param string $username
+     *
+     * @param string $username - The user name of the user for the WorkSpace. This user name must exist in the
+     *                           AWS Directory Service directory for the WorkSpace.
+     *
      * @param \Programster\AwsWrapper\Workspaces\WorkspacePropertyConfig $workspacePropertyConfig
+     *
      * @param Tag $tags
      */
     public function __construct(

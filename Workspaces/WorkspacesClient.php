@@ -39,10 +39,15 @@ class WorkspacesClient
      */
     public function createWorkspaces(WorkspaceConfig ...$workspaceConfigs)
     {
+        if (count($workspaceConfigs) === 0)
+        {
+            throw new \Exception("You must provide at lease one workspace config to create workspaces");
+        }
+        
         $params = array(
             'Workspaces' => $workspaceConfigs
         );
-        
+
         $response = $this->m_client->createWorkspaces($params);
         return $response;
     }
