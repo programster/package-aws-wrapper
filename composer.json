@@ -29,8 +29,10 @@
             "Programster\\AwsWrapper\\Objects\\": "objects/",
             "Programster\\AwsWrapper\\Requests\\": "requests/",
             "Programster\\AwsWrapper\\Responses\\": "responses/",
+            "Programster\\AwsWrapper\\Chime\\": "Chime/",
+            "Programster\\AwsWrapper\\Ec2\\": "Ec2/",
             "Programster\\AwsWrapper\\S3\\": "S3/",
-            "Programster\\AwsWrapper\\Ec2\\": "Ec2/"
+            "Programster\\AwsWrapper\\Sqs\\": "Sqs/"
         }
     }
 }
