@@ -31,6 +31,7 @@
             "Programster\\AwsWrapper\\Responses\\": "responses/",
             "Programster\\AwsWrapper\\Chime\\": "Chime/",
             "Programster\\AwsWrapper\\Ec2\\": "Ec2/",
+            "Programster\\AwsWrapper\\ElasticTranscoder\\": "ElasticTranscoder/",
             "Programster\\AwsWrapper\\S3\\": "S3/",
             "Programster\\AwsWrapper\\Sqs\\": "Sqs/"
         }
