@@ -9,12 +9,12 @@ namespace Programster\AwsWrapper\ElasticTranscoder;
 
 class AudioCodecOptions implements \JsonSerializable
 {
-    private $m_options;
+    private $m_arrayForm;
 
 
     private function __construct(array $options)
     {
-        $this->m_options = $options;
+        $this->m_arrayForm = $options;
     }
 
 
@@ -79,7 +79,7 @@ class AudioCodecOptions implements \JsonSerializable
 
     public function toArray() : array
     {
-        return $this->m_options;
+        return $this->m_arrayForm;
     }
 
 

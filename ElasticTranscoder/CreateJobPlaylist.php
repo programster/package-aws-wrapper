@@ -11,23 +11,15 @@ class CreateJobPlaylist implements \JsonSerializable
 {
     private $m_arrayForm;
 
-    
+
     /**
      *
      * @param \Programster\AwsWrapper\ElasticTranscoder\PlaylistFormat $format
-     *
-     * @param \Programster\AwsWrapper\ElasticTranscoder\HlsContentProtection $hlsContentProection
      *
      * @param string $name - The name that you want Elastic Transcoder to assign to the master playlist,
      *      for example, nyc-vacation.m3u8. If the name includes a / character, the section of the name before
      *      the last / must be identical for all Name objects. If you create more than one master playlist, the
      *      values of all Name objects must be unique.
-     *
-     *      Elastic Transcoder automatically appends the relevant file extension to the file name (.m3u8 for HLSv3
-     *      and HLSv4 playlists, and .ism and .ismc for Smooth playlists). If you include a file extension in Name,
-     *      the file name will have two extensions.
-     *
-     * @param \Programster\AwsWrapper\ElasticTranscoder\PlayReadyDrm|null $playReadyDrm
      *
      * @param array $outputKeys - For each output in this job that you want to include in a master playlist,
      *      the value of the Outputs:Key object.
@@ -54,21 +46,55 @@ class CreateJobPlaylist implements \JsonSerializable
      *      caption settings must be the same for all outputs in the playlist. For Smooth playlists, the
      *      Audio:Profile, Video:Profile, and Video:FrameRate to Video:KeyframesMaxDist ratio must be the same
      *      for all outputs.
+     *
+     *      Elastic Transcoder automatically appends the relevant file extension to the file name (.m3u8 for HLSv3
+     *      and HLSv4 playlists, and .ism and .ismc for Smooth playlists). If you include a file extension in Name,
+     *      the file name will have two extensions.
+     *
+     * @param \Programster\AwsWrapper\ElasticTranscoder\PlayReadyDrm|null $playReadyDrm - The DRM settings, if any,
+     * that you want Elastic Transcoder to apply to the output files associated with this playlist.
+     *
+     * @param \Programster\AwsWrapper\ElasticTranscoder\HlsContentProtection $hlsContentProection - The HLS content
+     * protection settings, if any, that you want Elastic Transcoder to apply to the output files associated with
+     * this playlist.
      */
     public function __construct(
         PlaylistFormat $format,
-        HlsContentProtection $hlsContentProection,
         string $name,
-        ?PlayReadyDrm $playReadyDrm,
-        array $outputKeys
+        CreateJobOutputCollection $outputs,
+        ?PlayReadyDrm $playReadyDrm = null,
+        ?HlsContentProtection $hlsContentProection = null
     )
     {
+        $outputKeys = array();
 
+        foreach ($outputs as $output)
+        {
+            /* @var $output CreateJobOutput */
+            $outputKeys[] = $output->getKey();
+        }
+
+        $this->m_arrayForm = array(
+            'Format' => (string) $format,
+            'Name' => $name,
+            'OutputKeys' => $outputKeys,
+        );
+
+        if ($playReadyDrm !== null)
+        {
+            $this->m_arrayForm['PlayReadyDrm'] = $playReadyDrm;
+        }
+
+        if ($hlsContentProection !== null)
+        {
+            $this->m_arrayForm[' HlsContentProtection '] = $hlsContentProection;
+        }
     }
 
 
     public function toArray() : array
     {
+        return $this->m_arrayForm;
     }
 
 

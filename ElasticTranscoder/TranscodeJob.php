@@ -17,21 +17,21 @@ class TranscodeJob implements \JsonSerializable
      */
     public function __construct(
         string $pipelineId,
-        JobInput $input,
+        CreateJobInput $input,
         ?PlaylistCollection $playlistCollection,
         ?string $outputKeyPrefix,
-        JobOutput ...$outputs
+        CreateJobOutputCollection $outputs
     )
     {
         $this->m_arrayForm = array(
             'PipelineId' => $pipelineId,
-            'Input' => $input,
-            'Outputs' => $outputs
+            'Input' => $input->toArray(),
+            'Outputs' => $outputs->getArrayCopy()
         );
 
         if ($playlistCollection !== null)
         {
-            $this->m_arrayForm['Playlists'] = $playlistCollection;
+            $this->m_arrayForm['Playlists'] = $playlistCollection->getArrayCopy();
         }
 
         if ($outputKeyPrefix !== null)

@@ -10,7 +10,7 @@ namespace Programster\AwsWrapper\ElasticTranscoder;
 
 class TimeSpan implements \JsonSerializable
 {
-    private $m_arrayForm;
+    protected $m_arrayForm;
 
 
     /**
@@ -27,35 +27,32 @@ class TimeSpan implements \JsonSerializable
      *      or sssss.SSS (maximum value: 86399.999).
      *      If you don't specify a value, Elastic Transcoder starts at the beginning of the input file.
      */
-    private function __construct(?string $startTime, ?string $duration)
+    protected function __construct(?string $startTime, ?string $duration)
     {
-        $this->m_options = array();
+        $this->m_arrayForm = array();
 
         if ($startTime !== null)
         {
-            $this->m_options['StartTime'] = $startTime;
+            $this->m_arrayForm['StartTime'] = $startTime;
         }
 
         if ($duration !== null)
         {
-            $this->m_options['Duration'] = $duration;
+            $this->m_arrayForm['Duration'] = $duration;
         }
-
-        $this->m_arrayForm = $value;
     }
 
 
-    public function __toString()
+    public function toArray()
     {
         return $this->m_arrayForm;
     }
-
+    
 
     public function jsonSerialize()
     {
-        return $this->m_options;
+        return $this->m_arrayForm;
     }
-
 }
 
 

@@ -7,7 +7,7 @@
 namespace Programster\AwsWrapper\ElasticTranscoder;
 
 
-class ThumbnailFormat
+class ImageFormat
 {
     private $m_value;
 
@@ -18,8 +18,8 @@ class ThumbnailFormat
     }
 
 
-    public static function createPng() : ThumbnailFormat { return new ThumbnailFormat("png"); }
-    public static function createJpg() : ThumbnailFormat { return new ThumbnailFormat("jpg"); }
+    public static function createPng() : ImageFormat { return new ImageFormat("png"); }
+    public static function createJpg() : ImageFormat { return new ImageFormat("jpg"); }
 
 
     public function __toString()

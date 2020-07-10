@@ -23,7 +23,7 @@ class PresetThumbnailConfig implements \JsonSerializable
      * A configuration for thumbnails
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#shape-thumbnails
      * @param \Programster\AwsWrapper\ElasticTranscoder\AspectRatio $aspectRatio
-     * @param \Programster\AwsWrapper\ElasticTranscoder\ThumbnailFormat $format
+     * @param \Programster\AwsWrapper\ElasticTranscoder\ImageFormat $format
      * @param int $interval - The approximate number of seconds between thumbnails. Specify an integer value.
      * @param int $maxHeight - The maximum height of thumbnails in pixels. If you specify auto, Elastic Transcoder
      *                          uses 1080 (Full HD) as the default value. If you specify a numeric value, enter an even
@@ -36,7 +36,7 @@ class PresetThumbnailConfig implements \JsonSerializable
      * @param type $sizingPolicy
      */
     public function __construct(
-        ThumbnailFormat $format,
+        ImageFormat $format,
         int $interval,
         int $maxHeight,
         int $maxWidth,

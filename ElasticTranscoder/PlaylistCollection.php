@@ -11,7 +11,7 @@ final class PlaylistCollection extends \ArrayObject
 {
     public function __construct(CreateJobPlaylist ...$playlists)
     {
-        parent::__construct($cars);
+        parent::__construct($playlists);
     }
 
 

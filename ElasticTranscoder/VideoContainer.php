@@ -31,7 +31,6 @@ class VideoContainer
     public static function createOgg() : VideoContainer { return new VideoContainer("ogg"); }
     public static function createOga() : VideoContainer { return new VideoContainer("oga"); }
     public static function createVob() : VideoContainer { return new VideoContainer("vob"); }
-    public static function createWav() : VideoContainer { return new VideoContainer("wav"); }
     public static function createWebm() : VideoContainer { return new VideoContainer("webm"); }
 
 

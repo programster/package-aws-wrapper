@@ -92,7 +92,8 @@ class ElasticTranscoderClient
      */
     public function createJob(TranscodeJob $job)
     {
-        return $this->m_client->createJob($job->toArray());
+        $params = json_decode(json_encode($job), true); // convert to one massive assoc array
+        return $this->m_client->createJob($params);
     }
 
 
