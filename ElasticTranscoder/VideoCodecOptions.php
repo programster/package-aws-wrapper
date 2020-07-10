@@ -47,21 +47,25 @@ class VideoCodecOptions implements \JsonSerializable
         VideoCodecProfile $profile,
         H264Level $h264Level,
         int $maxReferenceFrames,
-        ChromaSubsampling $chromaSubsampling,
+        ?ChromaSubsampling $chromaSubsampling,
         ?int $maxBitRate,
         ?int $bufferSize,
         ?InterlacedMode $interlacedMode,
         ?ColorSpaceConversionMode $colorSpaceConversionMode
     ) : VideoCodecOptions
     {
-        $maxReferenceFrames = \Programster\CoreLibs\Core::clampValue($maxReferenceFrames, 0, 16);
-
         $options = array(
             'Profile' => (string) $profile,
-            'Level' => (string) $h264Level,
-            'MaxReferenceFrames' => $maxReferenceFrames,
-            'ChromaSubsampling' => $chromaSubsampling,
         );
+
+        $options['Level'] = (string) $h264Level;
+        $clampedMaxReferenceFrames = \Programster\CoreLibs\Core::clampValue($maxReferenceFrames, 16, 0);
+        $options['MaxReferenceFrames'] = (string) $clampedMaxReferenceFrames;
+
+        if ($chromaSubsampling !== null)
+        {
+            $options['ChromaSubsampling'] = (string)$chromaSubsampling;
+        }
 
         if ($maxBitRate !== null)
         {

@@ -23,51 +23,51 @@ class SizingPolicy
      * in thumbnail MaxWidth or MaxHeight settings without exceeding the other value.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createFit() : VideoContainer { return new VideoContainer("Fit"); }
+    public static function createFit() : SizingPolicy { return new SizingPolicy("Fit"); }
 
 
     /**
-     * Elastic Transcoder scales thumbnails so they match the value that you specified in thumbnail MaxWidth or
-     * MaxHeight settings and matches or exceeds the other value. Elastic Transcoder centers the image in thumbnails
+     * Elastic Transcoder scales to match the value that you specified in MaxWidth or
+     * MaxHeight settings and matches or exceeds the other value. Elastic Transcoder centers the image
      * and then crops in the dimension (if any) that exceeds the maximum value.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createFill() : VideoContainer { return new VideoContainer("Fill"); }
+    public static function createFill() : SizingPolicy { return new SizingPolicy("Fill"); }
 
 
     /**
-     * Elastic Transcoder stretches thumbnails to match the values that you specified for thumbnail MaxWidth and
+     * Elastic Transcoder stretches the input to match the values that you specified for MaxWidth and
      * MaxHeight settings. If the relative proportions of the input video and thumbnails are different, the thumbnails
      * will be distorted.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createStretch() : VideoContainer { return new VideoContainer("Stretch"); }
+    public static function createStretch() : SizingPolicy { return new SizingPolicy("Stretch"); }
 
 
     /**
-     * Elastic Transcoder does not scale thumbnails. If either dimension of the input video exceeds the values that
-     * you specified for thumbnail MaxWidth and MaxHeight settings, Elastic Transcoder crops the thumbnails.
+     * Elastic Transcoder does not scale the video/thumbnail. If either dimension of the input video exceeds the values
+     * that you specified for MaxWidth and MaxHeight settings, Elastic Transcoder crops the source.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createKeep() : VideoContainer { return new VideoContainer("Keep"); }
+    public static function createKeep() : SizingPolicy { return new SizingPolicy("Keep"); }
 
 
     /**
-     * Elastic Transcoder scales thumbnails down so that their dimensions match the values that you specified for at
-     * least one of thumbnail MaxWidth and MaxHeight without exceeding either value. If you specify this option,
-     * Elastic Transcoder does not scale thumbnails up.
+     * Elastic Transcoder scales the video/thumbnail down so that their dimensions match the values that you specified
+     * for at least one of thumbnail MaxWidth and MaxHeight without exceeding either value. If you specify this option,
+     * Elastic Transcoder does not scale the thumbnail/video up.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createShrinkToFit() : VideoContainer { return new VideoContainer("ShrinkToFit"); }
+    public static function createShrinkToFit() : SizingPolicy { return new SizingPolicy("ShrinkToFit"); }
 
 
     /**
-     * Elastic Transcoder scales thumbnails down so that their dimensions match the values that you specified for at
+     * Elastic Transcoder scales the image down so that their dimensions match the values that you specified for at
      * least one of MaxWidth and MaxHeight without dropping below either value. If you specify this option, Elastic
-     * Transcoder does not scale thumbnails up.
+     * Transcoder does not scale the thumbnail/video up.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createShrinkToFill() : VideoContainer { return new VideoContainer("ShrinkToFill"); }
+    public static function createShrinkToFill() : SizingPolicy { return new SizingPolicy("ShrinkToFill"); }
 
 
 

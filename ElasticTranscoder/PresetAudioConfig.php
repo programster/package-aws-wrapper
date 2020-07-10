@@ -9,12 +9,7 @@ namespace Programster\AwsWrapper\ElasticTranscoder;
 
 class PresetAudioConfig implements \JsonSerializable
 {
-    private $m_audioPackingMode;
-    private $m_bitRate;
-    private $m_channels;
-    private $m_audioCodec;
-    private $m_audioCodecOptions;
-    private $m_sampleRate;
+    private $m_arrayForm = array();
 
 
     /**
@@ -29,35 +24,36 @@ class PresetAudioConfig implements \JsonSerializable
      * @param type $sampleRate
      */
     public function __construct(
-        AudioPackingMode $audioPackingMode,
-        int $bitRate,
-        AudioChannels $channels,
         AudioCodec $codec,
+        int $bitRate,
         AudioCodecOptions $audioCodecOptions,
-        AudioSampleRate $sampleRate
+        ?AudioSampleRate $sampleRate = null,
+        ?AudioPackingMode $audioPackingMode = null,
+        ?AudioChannels $channels = null
     )
     {
-        $this->m_channels = $channels ?? "auto";
-        $this->m_audioPackingMode = $audioPackingMode;
-        $this->m_bitRate = \Programster\CoreLibs\Core::clampValue($bitRate, 64, 320);
-        $this->m_audioCodec = $codec;
-        $this->m_audioCodecOptions = $audioCodecOptions;
-        $this->m_sampleRate = $sampleRate;
+        $this->m_arrayForm = array(
+            'BitRate' => (string)$bitRate,
+            'Codec' => (string) $codec,
+            'CodecOptions' => $audioCodecOptions->toArray(),
+        );
+
+        $sampleRate = $sampleRate ?? AudioSampleRate::createAuto();
+        $this->m_arrayForm['SampleRate'] = (string)$sampleRate;
+
+        $channels = $channels ?? AudioChannels::createAuto();
+        $this->m_arrayForm['Channels'] = (string)$channels;
+
+        if ($audioPackingMode !== null)
+        {
+            $this->m_arrayForm['AudioPackingMode'] = (string)$audioPackingMode;
+        }
     }
 
 
     public function toArray() : array
     {
-        $arrayForm = array(
-            'AudioPackingMode' => $this->m_audioPackingMode,
-            'BitRate' => $this->m_bitRate,
-            'Channels' => $this->m_channels,
-            'Codec' => $this->m_audioCodec,
-            'CodecOptions' => $this->m_audioCodecOptions,
-            'SampleRate' => $this->m_sampleRate,
-        );
-
-        return $arrayForm;
+        return $this->m_arrayForm;
     }
 
 

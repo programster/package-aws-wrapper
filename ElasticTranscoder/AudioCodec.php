@@ -18,7 +18,7 @@ class AudioCodec
     }
 
 
-    public static function createAac() : AudioCodec { return new AudioCodec("aac"); }
+    public static function createAac() : AudioCodec { return new AudioCodec("AAC"); }
     public static function createFlac() : AudioCodec { return new AudioCodec("flac"); }
     public static function createMp2() : AudioCodec { return new AudioCodec("mp2"); }
     public static function createMp3() : AudioCodec { return new AudioCodec("mp3"); }

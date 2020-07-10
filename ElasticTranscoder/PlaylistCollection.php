@@ -7,7 +7,7 @@
 namespace Programster\AwsWrapper\ElasticTranscoder;
 
 
-final class PlaylistCollection extends ArrayObject
+final class PlaylistCollection extends \ArrayObject
 {
     public function __construct(CreateJobPlaylist ...$playlists)
     {

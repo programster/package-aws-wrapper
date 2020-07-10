@@ -9,16 +9,7 @@ namespace Programster\AwsWrapper\ElasticTranscoder;
 
 class PresetVideoConfig implements \JsonSerializable
 {
-    private $m_bitRate;
-    private $m_codec;
-    private $m_codecOptions;
-    private $m_maxWidth;
-    private $m_maxHeight;
-    private $m_sizingPolicy;
-    private $m_paddingPolicy;
-    private $m_displayAspectRatio;
-    private $m_framerate;
-    private $m_maxFrameRate;
+    private $m_arrayForm;
 
 
     /**
@@ -64,25 +55,12 @@ class PresetVideoConfig implements \JsonSerializable
         ?int $bitRate,
         PaddingPolicy $paddingPolicy,
         SizingPolicy $sizingPolicy,
-        ?VideoFrameRate $videoFrameRate,
-        ?VideoMaxFrameRate $maxFrameRate,
-        ?bool $fixedGop,
-        PresetWatermark ...$waterMarks
+        ?VideoFrameRate $videoFrameRate = null,
+        ?VideoMaxFrameRate $maxFrameRate = null,
+        ?WatermarkCollection $watermarkCollection = null
     )
     {
-        if ($bitRate !== null)
-        {
-            $this->m_bitRate = $bitRate;
-        }
-        else
-        {
-            $this->m_bitRate = "auto";
-        }
-
-        if ($videoFrameRate === null)
-        {
-            $videoFrameRate = VideoFrameRate::createAuto();
-        }
+        $this->m_arrayForm = array();
 
         switch ((string) $codec)
         {
@@ -115,54 +93,42 @@ class PresetVideoConfig implements \JsonSerializable
             break;
         }
 
-        if ($fixedGop !== null)
-        {
-            if (!in_array((string) $codec, ["h264", "mpeg2", "vp8"]))
-            {
-                throw new Exception("Cannot set fixed GOP on container that is not h264, mpeg2, or vp8");
-            }
+        $this->m_arrayForm['FrameRate'] = (string)($videoFrameRate ?? VideoFrameRate::createAuto());
 
-            $this->m_fixedGop = $fixedGop;
+        if ($maxFrameRate !== null)
+        {
+            $this->m_arrayForm['MaxFrameRate'] = (string)$maxFrameRate;
         }
 
-        $this->m_codec = $codec;
-        $this->m_codecOptions = $codecOptions;
-        $this->m_maxHeight = \Programster\CoreLibs\Core::clampValue($maxHeight, 96, 3072);
-        $this->m_maxWidth = $maxWidth;
-        $this->m_paddingPolicy = $paddingPolicy;
-        $this->m_sizingPolicy = $sizingPolicy;
-        $this->m_framerate = $videoFrameRate;
-        $this->m_maxFrameRate = $maxFrameRate;
-        $this->m_keyframesMaxDist = $codec->getKeyFramesMaxDist();
+        $this->m_arrayForm['BitRate'] = ($bitRate !== null) ? (string)$bitRate : "auto";
+        $this->m_arrayForm['Codec'] = (string)$codec;
+        $this->m_arrayForm['CodecOptions'] = $codecOptions->toArray();
+        $this->m_arrayForm['MaxHeight'] = (string)\Programster\CoreLibs\Core::clampValue($maxHeight, 3072, 96);
+        $this->m_arrayForm['MaxWidth'] = (string)\Programster\CoreLibs\Core::clampValue($maxWidth, 4096, 128);
+        $this->m_arrayForm['PaddingPolicy'] = (string)$paddingPolicy;
+        $this->m_arrayForm['SizingPolicy'] = (string)$sizingPolicy;
+        $this->m_arrayForm['DisplayAspectRatio'] = "auto";
+
+        if ($codec->getFixedGop() !== null)
+        {
+            $this->m_arrayForm['FixedGOP'] = ($codec->getFixedGop()) ? "true" : "false";
+        }
+
+        if ($watermarkCollection !== null)
+        {
+            $this->m_arrayForm['Watermarks'] = $this->m_watermarkCollection->getArrayCopy();
+        }
+
+        if ($codec->getKeyFramesMaxDist() !== null)
+        {
+            $this->m_arrayForm['KeyframesMaxDist'] = (string)$codec->getKeyFramesMaxDist();
+        }
     }
 
 
     public function toArray() : array
     {
-        $arrayForm = array(
-            'BitRate' => $this->m_bitRate,
-            'Codec' => (string) $this->m_codec,
-            'CodecOptions' => $this->m_codecOptions,
-            'DisplayAspectRatio' => (string) $this->m_displayAspectRatio,
-            'FrameRate' => (string) $this->m_framerate,
-            'MaxFrameRate' => (string)$this->m_maxFrameRate,
-            'MaxHeight' => $this->m_maxHeight,
-            'MaxWidth' => $this->m_maxWidth,
-            'PaddingPolicy' => (string)$this->m_paddingPolicy,
-            'SizingPolicy' => (string)$this->m_sizingPolicy,
-        );
-
-        if ($this->m_codec->getKeyFramesMaxDist() !== null)
-        {
-            $arrayForm['KeyframesMaxDist'] = $this->m_codec->getKeyFramesMaxDist();
-        }
-
-        if ($this->m_fixedGop !== null)
-        {
-            $arrayForm['FixedGOP'] = $this->m_fixedGop;
-        }
-
-        return $arrayForm;
+        return $this->m_arrayForm;
     }
 
 

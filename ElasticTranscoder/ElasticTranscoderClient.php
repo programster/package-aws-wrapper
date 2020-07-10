@@ -26,7 +26,7 @@ class ElasticTranscoderClient
 
         $params = array(
             'credentials' => $credentials,
-            'version'     => '2012-09-25 ',
+            'version'     => '2012-09-25',
             'region'      => (string) $region,
         );
 
@@ -56,11 +56,16 @@ class ElasticTranscoderClient
         $params = array(
             'Name' => $name,
             'Description' => $description,
-            'Audio' => $audioConfig,
-            'Container' => $container,
-            'Video' => $videoConfig,
-            'Thumbnails'  => $thumbnailConfig,
+            'Audio' => $audioConfig->toArray(),
+            'Container' => (string)$container,
+            'Video' => $videoConfig->toArray(),
+            'Thumbnails'  => $thumbnailConfig->toArray(),
         );
+
+        $params = \Safe\json_decode(\Safe\json_encode($params), true);
+
+        #print \Programster\CoreLibs\Core::var_dump($params);
+        #die();
 
         $result = $this->m_client->createPreset($params);
         return $result;
@@ -168,7 +173,7 @@ class ElasticTranscoderClient
     public function listPresets(bool $ascending=true, ?int $pageToken = null)
     {
         $params = array(
-            'Ascending' => $id
+            'Ascending' => ($ascending) ? "true" : "false"
         );
 
         if ($pageToken !== null)

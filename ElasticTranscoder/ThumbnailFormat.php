@@ -18,8 +18,8 @@ class ThumbnailFormat
     }
 
 
-    public static function createPng() : VideoContainer { return new VideoContainer("png"); }
-    public static function createJpg() : VideoContainer { return new VideoContainer("jpg"); }
+    public static function createPng() : ThumbnailFormat { return new ThumbnailFormat("png"); }
+    public static function createJpg() : ThumbnailFormat { return new ThumbnailFormat("jpg"); }
 
 
     public function __toString()

@@ -24,7 +24,7 @@ class CaptionMergePolicy
      * and ignores the embedded captions for that language.
      * @return \Programster\AwsWrapper\ElasticTranscoder\CaptionMergePolicy
      */
-    public static function createMergeOverride() : CaptionMergePolicy { return new AudioCodec("MergeOverride"); }
+    public static function createMergeOverride() : CaptionMergePolicy { return new CaptionMergePolicy("MergeOverride"); }
 
 
     /**
@@ -34,14 +34,14 @@ class CaptionMergePolicy
      * omits all sidecar captions from the output files.
      * @return \Programster\AwsWrapper\ElasticTranscoder\CaptionMergePolicy
      */
-    public static function createMergeRetain() : CaptionMergePolicy { return new AudioCodec("MergeRetain"); }
+    public static function createMergeRetain() : CaptionMergePolicy { return new CaptionMergePolicy("MergeRetain"); }
 
 
     /**
      * Elastic Transcoder transcodes only the sidecar captions that you specify in CaptionSources.
      * @return \Programster\AwsWrapper\ElasticTranscoder\CaptionMergePolicy
      */
-    public static function createOverride() : CaptionMergePolicy { return new AudioCodec("Override"); }
+    public static function createOverride() : CaptionMergePolicy { return new CaptionMergePolicy("Override"); }
 
 
     public function __toString()

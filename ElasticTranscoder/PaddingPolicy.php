@@ -24,8 +24,8 @@ class PaddingPolicy
      * thumbnail MaxWidth and MaxHeight settings.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createPad() : VideoContainer { return new VideoContainer("Pad"); }
-    public static function createUnpadded() : VideoContainer { return new VideoContainer("Unpadded"); }
+    public static function createPad() : PaddingPolicy { return new PaddingPolicy("Pad"); }
+    public static function createUnpadded() : PaddingPolicy { return new PaddingPolicy("NoPad"); }
 
 
     public function __toString()

@@ -10,6 +10,8 @@ namespace Programster\AwsWrapper\ElasticTranscoder;
 class VideoCodec
 {
     private $m_value;
+    private $m_fixedGop;
+    private $m_keyframesMaxDist;
 
 
     /**
@@ -17,9 +19,10 @@ class VideoCodec
      * @param string $value
      * @param int|null $keyframesMaxDist - the maximum number of frames between keyframes.
      */
-    private function __construct(string $value, ?int $keyframesMaxDist)
+    private function __construct(string $value, ?bool $fixedGop, ?int $keyframesMaxDist)
     {
-        $this->m_keyframesMaxDist;
+        $this->m_keyframesMaxDist = $keyframesMaxDist;
+        $this->m_fixedGop = $fixedGop;
         $this->m_value = $value;
     }
 
@@ -40,12 +43,31 @@ class VideoCodec
      *
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createH264(int $keyframesMaxDist) : VideoContainer { return new VideoContainer("H.264", $keyframesMaxDist); }
-    public static function createMpeg2(int $keyframesMaxDist) : VideoContainer { return new VideoContainer("mpeg2", $keyframesMaxDist); }
-    public static function createVp8(int $keyframesMaxDist) : VideoContainer { return new VideoContainer("vp8", $keyframesMaxDist); }
+    public static function createH264(int $keyframesMaxDist, bool $fixedGop) : VideoCodec
+    {
+        return new VideoCodec("H.264", $fixedGop, $keyframesMaxDist);
+    }
 
-    public static function createGif() : VideoContainer { return new VideoContainer("gif", null); }
-    public static function createVp9() : VideoContainer { return new VideoContainer("vp9", null); }
+
+    public static function createMpeg2(int $keyframesMaxDist, ?bool $fixedGop) : VideoCodec
+    {
+        return new VideoCodec("mpeg2", $fixedGop, $keyframesMaxDist);
+    }
+
+
+    public static function createVp8(int $keyframesMaxDist, ?bool $fixedGop) : VideoCodec
+    {
+        return new VideoCodec("vp8", $fixedGop, $keyframesMaxDist);
+    }
+
+
+    public static function createVp9(?bool $fixedGop) : VideoCodec
+    {
+        return new VideoCodec("vp9", $fixedGop, null);
+    }
+
+
+    public static function createGif() : VideoCodec { return new VideoCodec("gif", null); }
 
 
     public function __toString()
@@ -59,5 +81,6 @@ class VideoCodec
      * @return int|null
      */
     public function getKeyFramesMaxDist() : ?int { return $this->m_keyframesMaxDist; }
+    public function getFixedGop() : ?bool { return $this->m_fixedGop; }
 }
 

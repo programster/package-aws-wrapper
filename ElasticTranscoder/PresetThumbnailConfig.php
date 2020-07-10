@@ -57,10 +57,10 @@ class PresetThumbnailConfig implements \JsonSerializable
     {
         return [
             'Format' => (string) $this->m_format,
-            'Interval' => $this->m_interval,
-            'MaxHeight' => $this->m_maxHeight,
-            'MaxWidth' => $this->m_maxWidth,
-            'PaddingPolicy' => $this->m_paddingPolicy,
+            'Interval' => (string)$this->m_interval,
+            'MaxHeight' => (string)$this->m_maxHeight,
+            'MaxWidth' => (string)$this->m_maxWidth,
+            'PaddingPolicy' => (string)$this->m_paddingPolicy,
             'SizingPolicy' => (string)$this->m_sizingPolicy,
         ];
     }

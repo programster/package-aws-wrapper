@@ -23,7 +23,7 @@ class WatermarkSizingPolicy
      * in thumbnail MaxWidth or MaxHeight settings without exceeding the other value.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createFit() : VideoContainer { return new VideoContainer("Fit"); }
+    public static function createFit() : WatermarkSizingPolicy { return new WatermarkSizingPolicy("Fit"); }
 
 
     /**
@@ -32,7 +32,7 @@ class WatermarkSizingPolicy
      * will be distorted.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createStretch() : VideoContainer { return new VideoContainer("Stretch"); }
+    public static function createStretch() : WatermarkSizingPolicy { return new WatermarkSizingPolicy("Stretch"); }
 
 
     /**
@@ -41,7 +41,7 @@ class WatermarkSizingPolicy
      * Elastic Transcoder does not scale thumbnails up.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createShrinkToFit() : VideoContainer { return new VideoContainer("ShrinkToFit"); }
+    public static function createShrinkToFit() : WatermarkSizingPolicy { return new WatermarkSizingPolicy("ShrinkToFit"); }
 
 
     public function __toString()

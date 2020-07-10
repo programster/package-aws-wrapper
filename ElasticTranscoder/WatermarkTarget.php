@@ -23,7 +23,7 @@ class WatermarkTarget
      * bars added by Elastic Transcoder, if any. In addition, MaxWidth and MaxHeight, if specified as a percentage,
      * are calculated based on the borders of the video excluding black bars added by Elastic Transcoder, if any.
      */
-    public static function createContent() : VideoContainer { return new VideoContainer("Content"); }
+    public static function createContent() : WatermarkTarget { return new WatermarkTarget("Content"); }
 
 
     /**
@@ -32,7 +32,7 @@ class WatermarkTarget
      * are calculated based on the borders of the video including black bars added by Elastic Transcoder, if any.
      * @return \Programster\AwsWrapper\ElasticTranscoder\VideoContainer
      */
-    public static function createFrame() : VideoContainer { return new VideoContainer("Frame"); }
+    public static function createFrame() : WatermarkTarget { return new WatermarkTarget("Frame"); }
 
 
     public function __toString()

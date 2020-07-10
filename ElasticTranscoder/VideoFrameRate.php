@@ -10,8 +10,6 @@ namespace Programster\AwsWrapper\ElasticTranscoder;
 
 class VideoFrameRate extends VideoMaxFrameRate
 {
-    private $m_value;
-
-    public static function createAuto() : VideoMaxFrameRate { return new VideoFrameRate("auto"); }
+    public static function createAuto() : VideoFrameRate { return new VideoFrameRate("auto"); }
 }
 
