@@ -114,11 +114,11 @@ class ElasticTranscoderClient
      * Returns detailed information about a job.
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#readjob
      */
-    public function readJob(string $id)
+    public function readJob(string $id) : ResponseReadJob
     {
         $params = array('Id' => $id);
         $result = $this->m_client->readJob($params);
-        return $result;
+        return new ResponseReadJob($result);
     }
 
 

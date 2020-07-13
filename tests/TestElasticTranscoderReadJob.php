@@ -66,17 +66,30 @@ function createTranscodeJob() : \Programster\AwsWrapper\ElasticTranscoder\Transc
 function main()
 {
     $transcoderClient = getTranscodeClient();
-    $transcodeJob = createTranscodeJob();
-    $response = $transcoderClient->createJob($transcodeJob);
 
-    if ($response->isOk())
+    if (false)
     {
-        $job = $response->getJob();
-        die("Transcode job: {$job->getId()}");
+        $transcodeJob = createTranscodeJob();
+        $response = $transcoderClient->createJob($transcodeJob);
+
+        if ($response->isOk())
+        {
+            $job = $response->getJob();
+            sleep(1);
+
+            // create the read request.
+            $readResponse = $transcoderClient->readJob($job->getId());
+            die(print_r($readResponse, true));
+        }
+        else
+        {
+            die("Failed to create transcode job");
+        }
     }
     else
     {
-        die("Failed to create transcode job");
+        $readResponse = $transcoderClient->readJob("1594633370982-1wms34");
+        die(print_r($readResponse, true));
     }
 }
 
