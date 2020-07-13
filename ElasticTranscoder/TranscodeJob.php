@@ -1,7 +1,8 @@
 <?php
 
 /*
- * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#shape-audioparameters
+ * A transcode job.
+ * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#shape-job
  */
 
 namespace Programster\AwsWrapper\ElasticTranscoder;
@@ -16,6 +17,7 @@ class TranscodeJob implements \JsonSerializable
     private $m_inputs;
     private $m_output;
     private $m_outputs;
+    private $m_status;
 
 
     private $m_arrayForm;
@@ -88,6 +90,7 @@ class TranscodeJob implements \JsonSerializable
         $job->m_inputs = $responseArray['Inputs'];
         $job->m_output = $responseArray['Output'];
         $job->m_outputs = $responseArray['Outputs'];
+        $job->m_status = $responseArray['Status'];
         return $job;
     }
 
@@ -121,6 +124,17 @@ class TranscodeJob implements \JsonSerializable
     public function getArn() { return $this->m_arn; }
 
 
+    /**
+     * Get the status of the job. If this object was created as part of a createJob/readJob response, the status will
+     * be set to one of "Submitted", "Progressing", "Complete", "Canceled", or "Error".
+     *
+     * The ID will be somethinng like "1594629649598-tk34t0"
+     * @return string|null
+     * @return type
+     */
+    public function getStatus() : ?string { return $this->m_status; }
+
+    
     public function getPipelineId() : string { return $this->m_pipelineId; }
     public function getInput() { return $this->m_input; }
     public function getInputs() { return $this->m_inputs; }

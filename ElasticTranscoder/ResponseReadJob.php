@@ -40,8 +40,8 @@ class ResponseReadJob
      * Find out if the response is okay. E.g. no errors.
      * WARNING - isOk will return successful if the request to read a job was successful. However, this does NOT
      * indicate whether the transcode completed successfully, just that we were able to read the job successfully.
-     * If the job failed to transcode, you have to dig into the job object that got returned, in order to find out
-     * what went wrong.
+     * If the job failed to transcode, check use job->getStatus() to see if it has a value of "Error". If so, then
+     * details of what went wrong will be in the "output", "outputs" and possibly "playlist" attributes.
      *
      * @return bool
      */
