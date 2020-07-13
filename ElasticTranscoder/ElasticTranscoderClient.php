@@ -90,10 +90,11 @@ class ElasticTranscoderClient
      * Create a transcoding job (transcode something).
      * https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-elastictranscoder-2012-09-25.html#createjob
      */
-    public function createJob(TranscodeJob $job)
+    public function createJob(TranscodeJob $job) : ResponseCreateJob
     {
         $params = json_decode(json_encode($job), true); // convert to one massive assoc array
-        return $this->m_client->createJob($params);
+        $response = $this->m_client->createJob($params);
+        return new ResponseCreateJob($response);
     }
 
 

@@ -40,7 +40,7 @@ function main()
 
     $jobInput = new \Programster\AwsWrapper\ElasticTranscoder\CreateJobInput("MyTestVideo.mp4");
 
-    $transcodeJob = new \Programster\AwsWrapper\ElasticTranscoder\TranscodeJob(
+    $transcodeJob = \Programster\AwsWrapper\ElasticTranscoder\TranscodeJob::createNew(
         '1581081524632-3qaw4r', // $pipelineId,
         $jobInput,
         $playlistCollection,
@@ -49,7 +49,15 @@ function main()
     );
 
     $response = $transcoderClient->createJob($transcodeJob);
-    die(print_r($response, true));
+    if ($response->isOk())
+    {
+        $job = $response->getJob();
+        die("Transcode job: {$job->getId()}");
+    }
+    else
+    {
+        die("Failed to create transcode job");
+    }
 }
 
 main();
