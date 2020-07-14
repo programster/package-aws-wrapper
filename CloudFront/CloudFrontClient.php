@@ -46,15 +46,12 @@ class CloudFrontClient
         string $cdnKeyId
     )
     {
-        $expires = time() + $duration;
         // Create the policy that restricts access to the client's IP address and adds an expiry time.
+        $expires = time() + $duration;
+        $conditions = ["DateLessThan" => ["AWS:EpochTime" => $expires]];
 
-        $conditions = [
-            "DateLessThan" => ["AWS:EpochTime" => $expires]
-        ];
-
-        // only limit by IP if the client IP isn't a local lan. This is to gracefully handle dev.
-        if (\Programster\CoreLibs\StringLib::contains($_SERVER['REMOTE_ADDR'], "192.168.") === FALSE)
+        // Limit by the client's IP address (except if local devving on private IP).
+        if (\Programster\CoreLibs\Core::isPrivateIp($_SERVER['REMOTE_ADDR']) === false)
         {
             $conditions["IpAddress"] = ["AWS:SourceIp" => "{$_SERVER['REMOTE_ADDR']}/32"];
         }
@@ -68,11 +65,12 @@ class CloudFrontClient
         $customPolicyArray = ["Statement" => $statements];
         $customPolicyJsonString = json_encode($customPolicyArray, JSON_UNESCAPED_SLASHES);
 
-        // Create a signed cookie for the resource using a custom policy
-        return $this->m_client->getSignedCookie([
+        $settings = array(
             'policy' => $customPolicyJsonString,
             'private_key' => $privateKeyPath,
             'key_pair_id' => $cdnKeyId
-        ]);
+        );
+
+        return $this->m_client->getSignedCookie($settings);
     }
 }
