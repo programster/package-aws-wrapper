@@ -13,38 +13,27 @@ class S3Object
     private $m_size;
     private $m_storageClass;
     private $m_owner;
-    
-    
+    private $m_eTag;
+
+
     public function __construct($data)
     {
         $this->m_key = $data['Key'];
         $this->m_lastModified = $data['LastModified'];
-        $this->m_owner = new S3ObjectOwner($data['Owner']);
         $this->m_size = $data['Size'];
+        $this->m_storageClass = $data['StorageClass'];
+        $this->m_owner = (isset($data['Owner'])) ? new S3ObjectOwner($data['Owner']) : null;
+        $this->m_eTag = (isset($data['ETag'])) ? $data['ETag'] : null;
     }
-    
-    
+
+
     # accessors
-    public function getKey() : string
-    {
-        return $this->m_key;
-    }
-    public function getLastModified() : DateTimeResult
-    {
-        return $this->m_lastModified;
-    }
-    public function getSize() : int
-    {
-        return $this->m_size;
-    }
-    public function getStorageClass() : string
-    {
-        return $this->m_storageClass;
-    }
-    public function getOwner() : S3ObjectOwner
-    {
-        return $this->m_owner;
-    }
+    public function getKey() : string { return $this->m_key; }
+    public function getLastModified() : DateTimeResult { return $this->m_lastModified; }
+    public function getSize() : int { return $this->m_size; }
+    public function getStorageClass() : string { return $this->m_storageClass; }
+    public function getOwner() : ?S3ObjectOwner { return $this->m_owner; }
+    public function getEtag() : ?string { return $this->m_eTag; }
 }
 
 /*
